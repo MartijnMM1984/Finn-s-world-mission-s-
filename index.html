@@ -212,7 +212,9 @@ svg text{font-family:var(--display)}
 #sheet{place-items:end center;padding:0}
 body.night #sheet .card{background:#141c33;color:#e8eefc}body.night #sheet .card::before{background:#3a4566}
 body.night .mitem{background:#1d2742;border-color:#2c3757;box-shadow:0 8px 22px rgba(0,0,0,.35)}body.night .mitem .ttl{color:#f2f5ff}body.night .mitem .sub{color:#9fb0d6}
-body.night .stitle{color:#f2f5ff}body.night .skick{color:#7fb2ff}body.night .xbtn{background:#2c3757;color:#e8eefc}body.night .thumb{background:#24305a}body.night .thumb::after{background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.35))}
+body.night .stitle{color:#f2f5ff}body.night .skick{color:#7fb2ff}body.night .xbtn{background:#2c3757;color:#e8eefc}
+body.night .vtx{color:#eef2ff}body.night .vrow{border-top-color:#2c3757}body.night .vbtn{background:#2c3757;color:#e8eefc}body.night .vbtn.rec{background:#5a2328;color:#ff8a80}body.night .vrow.on .vbtn.rec{background:#e8312a;color:#fff}body.night .vbtn:disabled{opacity:.35}
+body.night .vcat{background:#2f7bff}body.night .vmsg{background:#3a3220;color:#ffe08a}body.night .snote{color:#b8c4e0}body.night .slab{color:#9fb0d6}body.night .vrow.has .vtx::before{color:#5fe08f}body.night .thumb{background:#24305a}body.night .thumb::after{background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.35))}
 #sheet .card{max-width:520px;border-radius:28px 28px 0 0;padding:10px 18px 22px;text-align:left;animation:sheetUp .38s cubic-bezier(.2,.9,.3,1) both;max-height:88%}
 #sheet .card::before{content:'';display:block;width:44px;height:5px;border-radius:3px;background:#d7dde6;margin:0 auto 12px}
 @keyframes sheetUp{from{transform:translateY(100%)}}
@@ -410,7 +412,7 @@ body:not(.sheeting) #menu .topbar .roundbtn:nth-child(1){transition-delay:0s}bod
     <div class="coins" id="coinChip" aria-label="Sterren"><svg viewBox="0 0 40 40" class="coinIcon"></svg><span class="coinNum">0</span></div>
     <div class="title"><div class="sign"><div class="rods"><i></i><i></i></div><div class="bd"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.3l6.6-.8z" fill="#ffd23a" stroke="#d99400" stroke-width="1.2" stroke-linejoin="round"/></svg><b>Finn World Mission's</b><svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.3l6.6-.8z" fill="#ffd23a" stroke="#d99400" stroke-width="1.2" stroke-linejoin="round"/></svg></div></div></div>
     <div class="grow1"></div>
-    <div id="ver">v8.9</div>
+    <div id="ver">v9.0</div>
     <div id="shopUI" hidden>
       <div class="stop"><button class="sback" id="shopBack" aria-label="Terug"><svg viewBox="0 0 24 24" width="28" height="28"><path d="M15 5l-7 7 7 7" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="sbal" id="shopBal"></div></div>
       <div class="sheet2"><div class="sw" id="shopCols"></div><div class="row" id="shopItems"></div><button class="buy" id="shopBuy" hidden></button></div>
@@ -5372,7 +5374,7 @@ function openSettings(sure){$('sheetKick').textContent='Spel';$('sheetTitle').te
     <div class="srow"><button class="sbtn sdanger${sure?' sure':''}" data-reset="${sure?2:1}">${sure?'Ja, wis alles':'Spel resetten'}</button>${sure?'<button class="sbtn" data-cancel>Nee, toch niet</button>':''}</div>
     </div><div class="sset"><div class="slab">Zelf inspreken</div><div class="snote">Spreek de zinnen van het spel zelf in. Dan hoort Finn jouw stem in plaats van de computerstem.</div>
     <div class="srow"><button class="sbtn" data-openrec>Zinnen inspreken${VREC.keys.size?' ('+VREC.keys.size+' klaar)':''}</button></div>
-    <div class="snote" style="margin-top:8px">Versie v8.9</div></div>`;$('sheet').hidden=false;}
+    <div class="snote" style="margin-top:8px">Versie v9.0</div></div>`;$('sheet').hidden=false;}
 const MICI='<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',STOPI='<svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>',PLAYI='<svg viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z" fill="currentColor"/></svg>',DELI='<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
 const VCATS=['Garage en menu','Onderweg','Politie','Politie en boef','Brandweer','Ambulance','Trein','Wasstraat'];
 function vCat(t){const k=VKEY(t);return PCAT[k]||(S.heardCat&&S.heardCat[k])||'Garage en menu';}
@@ -6387,13 +6389,24 @@ function nightSky(scene){const T=THREE;const g=new T.Group();scene.add(g);
   g.follow=(x,z)=>g.position.set(x,0,z);return g;}
 function candyBG(){const T=THREE;const c=document.createElement('canvas');c.width=4;c.height=256;const x=c.getContext('2d');const gr=x.createLinearGradient(0,0,0,256);gr.addColorStop(0,'#3d9bff');gr.addColorStop(.6,'#8fd0ff');gr.addColorStop(1,'#e4f5ff');x.fillStyle=gr;x.fillRect(0,0,4,256);const t=new T.CanvasTexture(c);t.encoding=T.sRGBEncoding;return t;}
 /* regen (expertstand): druppels rond een punt, grijze lucht en regengeluid */
+/* zacht, doorlopend regengeluid (ruis + druppeltjes), stopt vanzelf als er niet meer geregend wordt */
+const RAINA={src:null,g:null,last:0,tm:null,buf:null};
+function rainBuf(a){if(RAINA.buf)return RAINA.buf;const sr=a.sampleRate,n=Math.floor(sr*6),F=Math.floor(sr*.4),b=a.createBuffer(2,n,sr);
+  for(let c=0;c<2;c++){const d=new Float32Array(n+F);let l=0,p=0;for(let i=0;i<n+F;i++){const w=Math.random()*2-1;l=(l+.02*w)/1.02;p=.97*p+.03*w;d[i]=l*3.5+p*.9+w*.05;}
+    for(let k=0;k<160;k++){const q=Math.floor(Math.random()*(n+F-1200)),f=1800+Math.random()*3200,am=.05+Math.random()*.1,dc=40+Math.random()*80;for(let j=0;j<1100;j++)d[q+j]+=Math.sin(j/sr*f*6.2832)*am*Math.exp(-j/dc);}
+    for(let i=0;i<F;i++){const t=i/F;d[i]=d[i]*t+d[n+i]*(1-t);}b.getChannelData(c).set(d.subarray(0,n));}
+  return RAINA.buf=b;}
+function rainPing(){const a=A();if(!a)return;RAINA.last=performance.now();
+  if(!RAINA.src){const s=a.createBufferSource();s.buffer=rainBuf(a);s.loop=true;const hp=a.createBiquadFilter();hp.type='highpass';hp.frequency.value=160;const lp=a.createBiquadFilter();lp.type='lowpass';lp.frequency.value=3200;lp.Q.value=.4;
+    const g=a.createGain();g.gain.setValueAtTime(0,a.currentTime);g.gain.linearRampToValueAtTime(.16,a.currentTime+1.5);s.connect(hp).connect(lp).connect(g).connect(master);s.start();RAINA.src=s;RAINA.g=g;}
+  if(!RAINA.tm)RAINA.tm=setInterval(()=>{if(performance.now()-RAINA.last>500){clearInterval(RAINA.tm);RAINA.tm=null;const s=RAINA.src,g=RAINA.g;RAINA.src=null;RAINA.g=null;if(s&&ac){const t=ac.currentTime;try{g.gain.cancelScheduledValues(t);g.gain.setValueAtTime(g.gain.value,t);g.gain.linearRampToValueAtTime(0,t+.6);s.stop(t+.7);}catch(e){}}}},250);}
 function rainRoll(){return S.level==='expert'&&Math.random()<.55;}
 function makeRain(scene,N,box,sl){sl=sl||[.12,.05];const T=THREE;N=N||1800;box=box||[44,24,44];const g=new T.BufferGeometry(),a=new Float32Array(N*6);
   for(let i=0;i<N;i++){const x=(Math.random()-.5)*box[0],y=Math.random()*box[1],z=(Math.random()-.5)*box[2];a.set([x,y,z,x+sl[0],y+.9,z+sl[1]],i*6);}
   g.setAttribute('position',new T.BufferAttribute(a,3));const m=new T.LineBasicMaterial({color:0xdde8f7,transparent:true,opacity:.6});const L=new T.LineSegments(g,m);L.frustumCulled=false;L.visible=false;scene.add(L);let snd=0;
   return {L,set(on,night){L.visible=!!on;m.color.set(night?0x8fa3c8:0xdde8f7);m.opacity=night?.45:.6;},
     step(dt,cx,cz){if(!L.visible)return;L.position.set(cx,0,cz);const p=g.attributes.position.array;for(let i=0;i<N;i++){let y=p[i*6+1]-dt*26;if(y<-1)y+=box[1];p[i*6+1]=y;p[i*6+4]=y+.9;}g.attributes.position.needsUpdate=true;
-      snd-=dt;if(snd<=0){snd=.9;try{if(S.sound!==false)noise(1.05,.022);}catch(e){}}}};}
+      try{if(S.sound!==false)rainPing();}catch(e){}}};}
 function nightBG(){const T=THREE;const c=document.createElement('canvas');c.width=4;c.height=256;const x=c.getContext('2d');const gr=x.createLinearGradient(0,0,0,256);gr.addColorStop(0,'#050a1c');gr.addColorStop(.55,'#0f1b3d');gr.addColorStop(1,'#2a3b6b');x.fillStyle=gr;x.fillRect(0,0,4,256);const t=new T.CanvasTexture(c);t.encoding=T.sRGBEncoding;return t;}
 function poolTex(){const T=THREE;if(poolTex.t)return poolTex.t;const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');const g=x.createRadialGradient(64,64,0,64,64,64);g.addColorStop(0,'rgba(255,214,140,1)');g.addColorStop(.45,'rgba(255,190,110,.45)');g.addColorStop(1,'rgba(255,170,90,0)');x.fillStyle=g;x.fillRect(0,0,128,128);poolTex.t=new T.CanvasTexture(c);return poolTex.t;}
 function addClouds(scene,cx,cz,R,n,y0){const T=THREE,{sph}=kit();const g=new T.Group();g.position.set(cx,0,cz);scene.add(g);
@@ -6494,7 +6507,7 @@ function startCity(m){
     rainG=new T.BufferGeometry();const a=new Float32Array(RNN*6);for(let i=0;i<RNN;i++){const x=(Math.random()-.5)*44,y=Math.random()*24,z=(Math.random()-.5)*44;a.set([x,y,z,x+.12,y+.9,z+.05],i*6);}
     rainG.setAttribute('position',new T.BufferAttribute(a,3));rainL=new T.LineSegments(rainG,new T.LineBasicMaterial({color:NIGHT?0x8fa3c8:0xdde8f7,transparent:true,opacity:NIGHT?.45:.6}));rainL.frustumCulled=false;scene.add(rainL);}
   function stepRainC(dt){if(!RAIN)return;rainL.position.set(cam.position.x,0,cam.position.z);const a=rainG.attributes.position.array;for(let i=0;i<RNN;i++){let y=a[i*6+1]-dt*26;if(y<-1)y+=24;a[i*6+1]=y;a[i*6+4]=y+.9;}rainG.attributes.position.needsUpdate=true;
-    rainSnd-=dt;if(rainSnd<=0){rainSnd=.9;try{if(S.sound!==false)noise(1.05,.022);}catch(e){}}}
+    try{if(S.sound!==false)rainPing();}catch(e){}}
   Object.assign(sun.shadow.camera,{left:-35,right:35,top:35,bottom:-35,near:1,far:120});sun.shadow.camera.updateProjectionMatrix();scene.add(sun);scene.add(sun.target);
   const gT=tex(256,256,(x,W,H)=>{x.fillStyle='#6fbf4f';x.fillRect(0,0,W,H);for(let i=0;i<1400;i++){x.fillStyle=Math.random()<.5?'#62b244':'#80cf5e';x.fillRect(Math.random()*W,Math.random()*H,3,3);}});
   gT.wrapS=gT.wrapT=T.RepeatWrapping;gT.repeat.set(80,80);
