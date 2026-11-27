@@ -342,6 +342,16 @@ body:not(.sheeting) #menu .topbar .roundbtn:nth-child(1){transition-delay:0s}bod
 #drive.free .dhud .track{visibility:hidden}
 #miniMap{position:absolute;right:12px;top:calc(66px + env(safe-area-inset-top));z-index:7;width:132px;height:132px;border-radius:50%;border:5px solid #ffc21a;box-shadow:0 8px 20px rgba(10,20,50,.4);background:#1f2a44;pointer-events:none}
 #miniMap.call{animation:mmBlink .6s steps(1) infinite}
+.vtop{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 10px}
+.vrow{display:flex;align-items:center;gap:8px;padding:10px 0;border-top:1px solid #e6eaf0}
+.vtx{flex:1;font-size:15px;line-height:1.35;color:#1f2a44}
+.vrow.has .vtx::before{content:'✓ ';color:#22a05a;font-weight:800}
+.vbtn{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:#eef1f5;color:#1f2a44;font-size:18px;display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+.vbtn svg{width:20px;height:20px}
+.vbtn.rec{background:#ffe3e1;color:#e8312a}.vrow.on .vbtn.rec{background:#e8312a;color:#fff;animation:vPulse 1s infinite}
+.vbtn:disabled{opacity:.3}
+@keyframes vPulse{0%{box-shadow:0 0 0 0 rgba(232,49,42,.6)}100%{box-shadow:0 0 0 14px rgba(232,49,42,0)}}
+.vmsg{background:#fff4d6;border-radius:12px;padding:10px 12px;font-size:14px;color:#6b4a00;margin:6px 0}
 #drive.train .dhud .track,#drive.train #cwheel,#drive.train #lpanel{display:none!important}
 #trainHud{position:absolute;inset:0;pointer-events:none;z-index:7}
 #trainHud button{pointer-events:auto;-webkit-tap-highlight-color:transparent;touch-action:none;border:0;padding:0;font:inherit}
@@ -355,10 +365,10 @@ body:not(.sheeting) #menu .topbar .roundbtn:nth-child(1){transition-delay:0s}bod
 @keyframes tdPulse{0%{box-shadow:0 0 0 0 rgba(255,210,58,.75),0 8px 18px rgba(10,20,50,.35)}100%{box-shadow:0 0 0 22px rgba(255,210,58,0),0 8px 18px rgba(10,20,50,.35)}}
 #tHorn{position:absolute;right:20px;bottom:calc(196px + env(safe-area-inset-bottom));width:74px;height:74px;border-radius:20px;background:#1f2a44;border:4px solid #fff;display:grid;place-items:center;box-shadow:0 8px 18px rgba(10,20,50,.35)}
 #tHorn:active{transform:scale(.94);background:#2f3d60}#tHorn svg{width:46px;height:46px}
-#tProg{position:absolute;left:30px;top:calc(150px + env(safe-area-inset-top));bottom:calc(300px + env(safe-area-inset-bottom));width:34px;border-radius:17px;background:#1f2a44;border:4px solid #fff;box-shadow:0 6px 14px rgba(10,20,50,.3)}
-#tProg .tl{position:absolute;left:50%;top:14px;bottom:14px;width:6px;margin-left:-3px;border-radius:3px;background:#4a5872}#tProg .tf{position:absolute;left:50%;top:14px;width:6px;margin-left:-3px;border-radius:3px;background:#3ec46d;height:0}
-#tProg i{position:absolute;left:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:#d6dbe3;border:3px solid #1f2a44;display:block}#tProg i.ok{background:#3ec46d}#tProg i.nx{background:#ffd23a;animation:tdBlink .8s steps(1) infinite}
-#tProg b{position:absolute;left:50%;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:#ffc21a;border:3px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.35);display:grid;place-items:center}#tProg b svg{width:20px;height:18px}
+#tProg{position:absolute;left:8px;top:calc(150px + env(safe-area-inset-top));bottom:calc(300px + env(safe-area-inset-bottom));width:20px;border-radius:10px;background:#1f2a44;border:3px solid #fff;box-shadow:0 6px 14px rgba(10,20,50,.3)}
+#tProg .tl{position:absolute;left:50%;top:14px;bottom:14px;width:4px;margin-left:-2px;border-radius:3px;background:#4a5872}#tProg .tf{position:absolute;left:50%;top:14px;width:4px;margin-left:-2px;border-radius:3px;background:#3ec46d;height:0}
+#tProg i{position:absolute;left:50%;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:#d6dbe3;border:2px solid #1f2a44;display:block}#tProg i.ok{background:#3ec46d}#tProg i.nx{background:#ffd23a;animation:tdBlink .8s steps(1) infinite}
+#tProg b{position:absolute;left:50%;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;background:#ffc21a;border:3px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.35);display:grid;place-items:center}#tProg b svg{width:16px;height:14px}
 @keyframes tdBlink{50%{background:#d6dbe3}}
 #washHud{position:absolute;inset:0;pointer-events:none;z-index:8}
 #washHud .wbar{position:absolute;left:50%;transform:translateX(-50%);top:calc(78px + env(safe-area-inset-top));width:58%;height:28px;border-radius:14px;background:#1f2a44;border:4px solid #fff;box-shadow:0 6px 16px rgba(10,20,50,.35);overflow:hidden}
@@ -399,7 +409,7 @@ body:not(.sheeting) #menu .topbar .roundbtn:nth-child(1){transition-delay:0s}bod
     <div class="coins" id="coinChip" aria-label="Sterren"><svg viewBox="0 0 40 40" class="coinIcon"></svg><span class="coinNum">0</span></div>
     <div class="title"><div class="sign"><div class="rods"><i></i><i></i></div><div class="bd"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.3l6.6-.8z" fill="#ffd23a" stroke="#d99400" stroke-width="1.2" stroke-linejoin="round"/></svg><b>Finn World Mission's</b><svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.3l6.6-.8z" fill="#ffd23a" stroke="#d99400" stroke-width="1.2" stroke-linejoin="round"/></svg></div></div></div>
     <div class="grow1"></div>
-    <div id="ver">v8.5</div>
+    <div id="ver">v8.8</div>
     <div id="shopUI" hidden>
       <div class="stop"><button class="sback" id="shopBack" aria-label="Terug"><svg viewBox="0 0 24 24" width="28" height="28"><path d="M15 5l-7 7 7 7" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="sbal" id="shopBal"></div></div>
       <div class="sheet2"><div class="sw" id="shopCols"></div><div class="row" id="shopItems"></div><button class="buy" id="shopBuy" hidden></button></div>
@@ -4766,9 +4776,34 @@ function voiceScore(v){const n=(v.name+' '+v.voiceURI).toLowerCase();let sc=0;if
   if(/fenna|colette|ellen|claire|lotte|femke|sanne|anna|xandra|tfb|yfr|lfc|female|vrouw/.test(n))sc+=5;if(/maarten|frank|xander|bart|arnaud|bmh|dma|male|man\b/.test(n)&&!/female/.test(n))sc-=5;
   if(v.lang.toLowerCase().replace('_','-')==='nl-nl')sc+=2;return sc;}
 function bestVoice(){const vs=nlVoices();if(!vs.length)return null;if(S.voice){const f=vs.find(v=>(v.voiceURI||v.name)===S.voice)||vs.find(v=>v.name===S.voice);if(f)return f;}return vs.slice().sort((a,b)=>voiceScore(b)-voiceScore(a))[0];}
-function say(t){if(!S.sound)return;try{const s=window.speechSynthesis;if(!s)return;s.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='nl-NL';const v=bestVoice();if(v)u.voice=v;u.rate=1;u.pitch=1.05;window.__utt=u;
+/* ---------- zelf ingesproken zinnen (opgeslagen op dit toestel) ---------- */
+const PHRASES=["Oeps! Die blauwe auto rijdt netjes.", "Daar gaat de boef! Rij er snel achteraan!", "Snel! De politie zit achter je. Rij naar de schuilplaats en gooi dingen uit de auto!", "Oeps!", "Gepakt! Goed zo, Finn!", "Ontsnapt!", "Kies een missie!", "Alles is gewist. Veel plezier!", "Hallo Finn! Zo klink ik. Zullen we gaan spelen?", "De politie en de brandweer zijn er al. Nu ben jij aan de beurt!", "Het komt goed, hoor!", "Zo, een mooi verband!", "Lekker warm!", "Hup, naar het ziekenhuis! Druk maar op de sirene!", "Eerst de boef vangen! Tik op de boef.", "Oké, oké, ik geef me over!", "Klik! Je bent aangehouden, meneer de boef.", "Ja! Dat is de fiets van Tim!", "Mijn fiets!", "Ring ring! Dankjewel, agent Finn!", "Ja! Je hebt Sanne gevonden!", "Sanne! Daar ben je!", "Dankjewel, agent Finn!", "Oei! De auto is helemaal vies geworden. We gaan zo naar de wasstraat!", "Een andere weg! De gele pijl wijst je de nieuwe route.", "Oeps, verkeerde weg! Volg de gele pijl.", "Je bent er! Blus het vuur. Tik op de vlammen!", "Je bent er! De vuilnisbak staat in brand. Tik op de vlammen!", "Daar is de boef met de fiets! Tik op hem om hem te vangen!", "Alle stations gehad! Goed gedaan, machinist Finn!", "De deuren zijn dicht. Duw de hendel omhoog en rij naar het volgende station.", "Let op, het sein is rood! Rem maar af en wacht.", "Stop! Het sein is rood. We wachten even.", "Groen! Rijden maar.", "Daar komt het station! Trek de hendel naar beneden om te remmen bij de groene pijl.", "Oeps, een beetje te ver! We rijden even terug.", "Zo! Nu staan we goed. Druk op de deurknop.", "Iedereen is ingestapt! Druk op de knop om de deuren dicht te doen.", "Welkom in de wasstraat! Eerst de spons. Veeg over de auto en maak hem vol schuim!", "Goed zo! Nu spoelen we het schuim eraf met water. Veeg maar!", "Bijna klaar! Droog de auto met de doek.", "Wauw! Wat glimt hij mooi! Goed gedaan!", "De auto is weer schoon. Rij maar weer rond!", "Draai aan het stuur! Volg de gele pijl.", "Hoor je dat? De ambulance komt eraan!", "We zijn er! De brandweermannen stappen uit en pakken de slangen.", "De slangen liggen klaar. Tik op de vlammen om ze te blussen met schuim!", "De brandweerman klimt naar boven!", "Pak mijn hand maar, mevrouw!", "Rustig aan. Stapje voor stapje naar beneden.", "Dankjewel, brandweer! Je hebt me gered!", "De brandweerman klimt de ladder op!", "Kom maar poesje, ik heb je!", "Hebbes! Nu voorzichtig naar beneden.", "Alsjeblieft, hier is je poes!", "Dankjewel brandweer! Mijn poes is weer veilig!", "Hoera! Kom maar, poesje!", "Het vuur is uit en iedereen is veilig. Dankjewel, brandweer!", "Goed gericht! Tik nu om de ladder omhoog te doen.", "Daar is de ambulance ook. Die helpt de bestuurder van de auto.", "Jij bent de machinist! Duw de rode hendel omhoog om te rijden. Bij het station trek je hem naar beneden om te remmen.", "Je bent bij de kazerne. Rij maar lekker rond door de stad! Bij een kruispunt kies je zelf de weg. Als er een melding komt, hoor je de portofoon.", "Tik op een auto, dan mag de hele rij rijden.", "Wacht even! Er rijdt nog een auto over het kruispunt.", "Goed zo! De hulpdienst kan door.", "Welkom Finn! Kies een voertuig.", "Raak!", "Glibber glibber!", "Haha!", "Nee, dat is niet de fiets van Tim.", "Die is het niet. Kijk nog eens goed!", "Nee hoor, ik ben Sanne niet!", "Ik ben Sanne niet. Zoek nog maar even!", "Nee, ik heet geen Sanne!", "Goed zo!", "Lekker rijden!", "Kijk eens rond in de stad!", "Super!", "Ja, die kant op!", "De deuren zijn open. Iedereen stapt in!", "Instappen maar!", "Kijk, de mensen stappen in!", "Nog een paar!", "Melding! Er is brand in een huis. Zet de sirene aan en rij er snel naartoe. Volg de gele pijl!", "Melding! Brand in de woonwijk, en er staat iemand op het balkon! Snel, rij erheen. Volg de gele pijl!", "Melding! Een poesje zit vast in een hoge boom. Rij erheen en help het poesje!", "Melding! Brand bij het tankstation! Een auto is tegen de pomp gereden. Snel erheen, volg de gele pijl!", "Melding! Brand in een grote loods op het bedrijventerrein! Rij er snel naartoe, volg de gele pijl!", "Melding! Er staat een vuilnisbak in brand! Rij er snel naartoe. Volg de gele pijl!", "Tijd voor de wasstraat! Rij er naartoe, volg de gele pijl. Dan maken we de auto weer helemaal schoon!", "De politieauto! Tatuu tatuu!", "De brandweerauto! Met een lange ladder.", "De auto van de boef! Kun jij ontsnappen?", "De ambulance! Die helpt mensen die gewond zijn.", "De trein! Tuut tuut, instappen!"];
+const VKEY=t=>String(t).toLowerCase().replace(/\s+/g,' ').trim();
+const VREC={db:null,keys:new Set(),urls:{},audio:null,list:[],rec:null,stream:null,idx:-1,timer:null,filt:'all',msg:''};
+function vdb(){return new Promise((res,rej)=>{if(VREC.db)return res(VREC.db);if(!window.indexedDB)return rej('geen opslag');const r=indexedDB.open('finnStem',1);r.onupgradeneeded=()=>r.result.createObjectStore('rec');r.onsuccess=()=>{VREC.db=r.result;res(VREC.db);};r.onerror=()=>rej(r.error);});}
+function vGet(k){return vdb().then(db=>new Promise(res=>{const q=db.transaction('rec').objectStore('rec').get(k);q.onsuccess=()=>res(q.result||null);q.onerror=()=>res(null);})).catch(()=>null);}
+function vPut(k,b){return vdb().then(db=>new Promise(res=>{const tx=db.transaction('rec','readwrite');tx.objectStore('rec').put(b,k);tx.oncomplete=()=>{VREC.keys.add(k);if(VREC.urls[k]){URL.revokeObjectURL(VREC.urls[k]);delete VREC.urls[k];}res(true);};tx.onerror=()=>res(false);}));}
+function vDel(k){return vdb().then(db=>new Promise(res=>{const tx=db.transaction('rec','readwrite');tx.objectStore('rec').delete(k);tx.oncomplete=()=>{VREC.keys.delete(k);if(VREC.urls[k]){URL.revokeObjectURL(VREC.urls[k]);delete VREC.urls[k];}res(true);};}));}
+try{vdb().then(db=>{const q=db.transaction('rec').objectStore('rec').getAllKeys();q.onsuccess=()=>{(q.result||[]).forEach(k=>VREC.keys.add(k));};}).catch(()=>{});}catch(e){}
+function vAll(){return vdb().then(db=>new Promise(res=>{const out=[];const q=db.transaction('rec').objectStore('rec').openCursor();q.onsuccess=()=>{const c=q.result;if(c){out.push([c.key,c.value]);c.continue();}else res(out);};q.onerror=()=>res(out);}));}
+const b2u=b=>new Promise(res=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(',')[1]||'');r.readAsDataURL(b);});
+async function vExport(){try{const all=await vAll();if(!all.length){VREC.msg='Er zijn nog geen opnames om te bewaren.';openRec();return;}
+  const items=[];for(const [k,b] of all)items.push({k,t:b.type||'audio/webm',d:await b2u(b)});
+  const txt=JSON.stringify({app:'finn-stem',v:1,made:new Date().toISOString(),items});const name='finn-stem-backup.json';const file=new File([txt],name,{type:'application/json'});
+  if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:'Finn stem backup'});VREC.msg=items.length+' zinnen in de backup gezet.';openRec();return;}catch(e){if(e&&e.name==='AbortError'){return;}}}
+  const u=URL.createObjectURL(file),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);
+  VREC.msg='Backup met '+items.length+' zinnen is gedownload ('+name+'). Stuur dit bestand naar de andere telefoon.';openRec();}catch(e){VREC.msg='De backup maken lukte niet.';openRec();}}
+async function vImport(file){try{const j=JSON.parse(await file.text());if(!j||j.app!=='finn-stem'||!Array.isArray(j.items))throw 0;let n=0;
+  for(const it of j.items){if(!it||!it.k||!it.d)continue;const bin=atob(it.d),arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);if(await vPut(it.k,new Blob([arr],{type:it.t||'audio/webm'})))n++;}
+  VREC.msg=n+' zinnen zijn teruggezet. Finn hoort nu weer jouw stem.';}catch(e){VREC.msg='Dit bestand is geen stem-backup van het spel.';}openRec();}
+function vStop(){if(VREC.audio){try{VREC.audio.pause();}catch(e){}VREC.audio=null;}}
+function vPlay(k){vStop();return vGet(k).then(b=>{if(!b)return false;const u=VREC.urls[k]||(VREC.urls[k]=URL.createObjectURL(b));const a=new Audio(u);VREC.audio=a;a.play().catch(()=>{});return true;});}
+function vHeard(t){const k=VKEY(t);if(!k)return;S.heard=(S.heard||[]).filter(x=>VKEY(x)!==k);S.heard.unshift(String(t).trim());if(S.heard.length>300)S.heard.length=300;clearTimeout(vHeard.tm);vHeard.tm=setTimeout(()=>{try{save();}catch(e){}},1500);}
+function say(t){if(!S.sound)return;try{vHeard(t);}catch(e){}
+  if(S.myVoice!==false&&VREC.keys.has(VKEY(t))){try{window.speechSynthesis&&window.speechSynthesis.cancel();}catch(e){}vPlay(VKEY(t));return;}
+  vStop();try{const s=window.speechSynthesis;if(!s)return;s.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='nl-NL';const v=bestVoice();if(v)u.voice=v;u.rate=1;u.pitch=1.05;window.__utt=u;
   setTimeout(()=>{try{if(s.paused)s.resume();s.speak(u);}catch(e){}},80);}catch(e){}}
-function hush(){{const e=document.getElementById('sub');if(e)e.classList.remove('on');}try{window.speechSynthesis&&window.speechSynthesis.cancel();}catch(e){}}
+function hush(){vStop();{const e=document.getElementById('sub');if(e)e.classList.remove('on');}try{window.speechSynthesis&&window.speechSynthesis.cancel();}catch(e){}}
 
 /* ---------- vrolijk muziekje, live gespeeld ---------- */
 const MUS={timer:null,next:0,step:0,gain:null,duck:1};
@@ -5330,9 +5365,34 @@ function openAll(){$('sheetKick').textContent='Kies een missie';$('sheetTitle').
 function openSettings(sure){$('sheetKick').textContent='Spel';$('sheetTitle').textContent='Instellingen';
   $('mlist').innerHTML=`<div class="sset"><div class="slab">Opnieuw beginnen</div><div class="snote">Wist alle sterren en gehaalde missies.</div>
     <div class="srow"><button class="sbtn sdanger${sure?' sure':''}" data-reset="${sure?2:1}">${sure?'Ja, wis alles':'Spel resetten'}</button>${sure?'<button class="sbtn" data-cancel>Nee, toch niet</button>':''}</div>
-    </div><div class="sset"><div class="slab">Stem</div><div class="snote">Tik op een stem om te luisteren. De stem die je kiest, praat in het hele spel.</div>
-    <div class="srow" style="flex-wrap:wrap">${(()=>{const vs=nlVoices().slice().sort((a,b)=>voiceScore(b)-voiceScore(a)).slice(0,8),cur=bestVoice();const lb=v=>v.name.replace(/^(Microsoft|Google|Apple)\s*/i,'').replace(/\s*\(.*$/,'').replace(/ - .*$/,'').slice(0,22)||'Stem';const dup=n=>vs.filter(w=>lb(w)===n).length>1;return vs.length?vs.map((v,i)=>`<button class="sbtn${cur&&(cur.voiceURI||cur.name)===(v.voiceURI||v.name)?' sure':''}" data-voice="${(v.voiceURI||v.name).replace(/"/g,'&quot;')}">${i===0?'★ ':''}${lb(v)}${dup(lb(v))?' '+(i+1):''}</button>`).join(''):'<div class="snote">Geen Nederlandse stemmen gevonden op dit apparaat.</div>';})()}</div>
-    <div class="snote" style="margin-top:8px">Versie v8.5</div></div>`;$('sheet').hidden=false;}
+    </div><div class="sset"><div class="slab">Zelf inspreken</div><div class="snote">Spreek de zinnen van het spel zelf in. Dan hoort Finn jouw stem in plaats van de computerstem.</div>
+    <div class="srow"><button class="sbtn" data-openrec>Zinnen inspreken${VREC.keys.size?' ('+VREC.keys.size+' klaar)':''}</button></div>
+    <div class="snote" style="margin-top:8px">Versie v8.8</div></div>`;$('sheet').hidden=false;}
+const MICI='<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',STOPI='<svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>',PLAYI='<svg viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z" fill="currentColor"/></svg>',DELI='<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
+function vList(){const seen=new Set(),out=[];[...(S.heard||[]),...PHRASES].forEach(t=>{const k=VKEY(t);if(!k||seen.has(k))return;seen.add(k);out.push(t);});return out;}
+function openRec(){$('sheetKick').textContent='Instellingen';$('sheetTitle').textContent='Zelf inspreken';const all=vList();VREC.list=VREC.filt==='todo'?all.filter(t=>!VREC.keys.has(VKEY(t))):all;
+  const done=all.filter(t=>VREC.keys.has(VKEY(t))).length;
+  $('mlist').innerHTML=`<div class="sset"><div class="snote">Druk op de rode microfoon en lees de zin voor. Druk nog een keer om te stoppen. Bovenaan staan de zinnen die Finn het laatst gehoord heeft.</div>
+    ${VREC.msg?`<div class="vmsg">${VREC.msg}</div>`:''}
+    <div class="vtop"><button class="sbtn" data-vback>Terug</button><button class="sbtn${S.myVoice!==false?' sure':''}" data-vtog>Mijn stem: ${S.myVoice!==false?'aan':'uit'}</button>
+    <button class="sbtn${VREC.filt==='all'?' sure':''}" data-vfilt="all">Alles</button><button class="sbtn${VREC.filt==='todo'?' sure':''}" data-vfilt="todo">Nog doen</button>
+    <button class="sbtn" data-vexp>Backup maken</button><button class="sbtn" data-vimp>Backup terugzetten</button><input type="file" id="vImpF" accept=".json,application/json" hidden></div>
+    <div class="snote"><b>${done}</b> van de ${all.length} zinnen ingesproken.</div>
+    ${VREC.list.map((t,i)=>{const h=VREC.keys.has(VKEY(t));return `<div class="vrow${h?' has':''}${VREC.idx===i&&VREC.rec?' on':''}" data-vi="${i}"><div class="vtx">${t.replace(/</g,'&lt;')}</div><button class="vbtn rec" data-rec="${i}" aria-label="Opnemen">${VREC.idx===i&&VREC.rec?STOPI:MICI}</button><button class="vbtn" data-play="${i}" aria-label="Afspelen" ${h?'':'disabled'}>${PLAYI}</button><button class="vbtn" data-del="${i}" aria-label="Wissen" ${h?'':'disabled'}>${DELI}</button></div>`;}).join('')}</div>`;
+  $('sheet').hidden=false;}
+function vMicOff(){if(VREC.stream){VREC.stream.getTracks().forEach(t=>t.stop());VREC.stream=null;}}
+function vRecStop(){clearTimeout(VREC.timer);if(VREC.rec&&VREC.rec.state!=='inactive'){try{VREC.rec.stop();}catch(e){}}}
+async function vRecStart(i){if(VREC.rec){const was=VREC.idx;vRecStop();if(was===i)return;}
+  hush();VREC.msg='';const t=VREC.list[i];if(!t)return;
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder){VREC.msg='Opnemen lukt hier niet. Open het spel in Chrome (of Safari) via de link, dan werkt het wel.';openRec();return;}
+  try{if(!VREC.stream)VREC.stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});}
+  catch(e){VREC.msg='Het spel mag de microfoon niet gebruiken. Geef toestemming voor de microfoon en probeer het nog een keer.';openRec();return;}
+  const mg=MUS&&MUS.gain?MUS.gain.gain.value:null;if(mg!=null)MUS.gain.gain.value=0;
+  const ch=[];let r;try{r=new MediaRecorder(VREC.stream);}catch(e){VREC.msg='Opnemen lukt niet op dit toestel.';openRec();return;}
+  VREC.rec=r;VREC.idx=i;r.ondataavailable=ev=>{if(ev.data&&ev.data.size)ch.push(ev.data);};
+  r.onstop=async()=>{if(mg!=null&&MUS.gain)MUS.gain.gain.value=mg;VREC.rec=null;VREC.idx=-1;const b=new Blob(ch,{type:r.mimeType||'audio/webm'});
+    if(b.size>800){await vPut(VKEY(t),b);sfx.pop&&sfx.pop();}openRec();};
+  r.start();VREC.timer=setTimeout(vRecStop,15000);openRec();}
 function openVeh(i){const vi=mod(i);curVeh=vi;const v=VEH[vi];
   if(v.missions.length===1){startMission(MID(v.missions[0]));return;}
   $('sheetKick').textContent='Kies een missie';$('sheetTitle').textContent=v.name;
@@ -5342,9 +5402,16 @@ $('mlist').addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(
   const r=e.target.closest('[data-reset]');if(r){if(r.dataset.reset==='1'){sfx.pop();openSettings(true);return;}
     S.coins=0;S.done={};save();coinUI();renderLevels();$('sheet').hidden=true;sfx.pop();say('Alles is gewist. Veel plezier!');return;}
   if(e.target.closest('[data-cancel]')){sfx.pop();openSettings(false);return;}
-  const vb=e.target.closest('[data-voice]');if(vb){A();S.voice=vb.dataset.voice;save();openSettings(false);say('Hallo Finn! Zo klink ik. Zullen we gaan spelen?');return;}});
-try{if(window.speechSynthesis)speechSynthesis.addEventListener('voiceschanged',()=>{const sh=$('sheet');if(sh&&!sh.hidden&&$('sheetTitle').textContent==='Instellingen')openSettings(false);});}catch(e){}
-$('sheetClose').onclick=()=>{$('sheet').hidden=true;hush();};
+  if(e.target.closest('[data-openrec]')){A();VREC.msg='';VREC.filt='all';openRec();return;}
+  if(e.target.closest('[data-vback]')){vRecStop();vMicOff();openSettings(false);return;}
+  if(e.target.closest('[data-vexp]')){A();VREC.msg='Backup wordt gemaakt...';openRec();vExport();return;}
+  if(e.target.closest('[data-vimp]')){A();const f=$('vImpF');if(f){f.onchange=()=>{if(f.files&&f.files[0]){VREC.msg='Bezig met terugzetten...';const ff=f.files[0];openRec();vImport(ff);}};f.click();}return;}
+  if(e.target.closest('[data-vtog]')){S.myVoice=S.myVoice===false;save();openRec();return;}
+  const vf=e.target.closest('[data-vfilt]');if(vf){VREC.filt=vf.dataset.vfilt;openRec();return;}
+  const rc=e.target.closest('[data-rec]');if(rc){A();vRecStart(+rc.dataset.rec);return;}
+  const pl=e.target.closest('[data-play]');if(pl){A();vPlay(VKEY(VREC.list[+pl.dataset.play]));return;}
+  const dl=e.target.closest('[data-del]');if(dl){vDel(VKEY(VREC.list[+dl.dataset.del])).then(openRec);return;}});
+$('sheetClose').onclick=()=>{$('sheet').hidden=true;hush();vRecStop();vMicOff();};
 
 let KIT=null;
 function kit(){if(KIT)return KIT;const T=THREE;const lin=c=>new T.Color(c).convertSRGBToLinear();let WL=null,IL=null;
