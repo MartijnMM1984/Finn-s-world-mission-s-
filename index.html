@@ -412,7 +412,7 @@ body:not(.sheeting) #menu .topbar .roundbtn:nth-child(1){transition-delay:0s}bod
     <div class="coins" id="coinChip" aria-label="Sterren"><svg viewBox="0 0 40 40" class="coinIcon"></svg><span class="coinNum">0</span></div>
     <div class="title"><div class="sign"><div class="rods"><i></i><i></i></div><div class="bd"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.3l6.6-.8z" fill="#ffd23a" stroke="#d99400" stroke-width="1.2" stroke-linejoin="round"/></svg><b>Finn World Mission's</b><svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.3l6.6-.8z" fill="#ffd23a" stroke="#d99400" stroke-width="1.2" stroke-linejoin="round"/></svg></div></div></div>
     <div class="grow1"></div>
-    <div id="ver">v9.0</div>
+    <div id="ver">v9.2</div>
     <div id="shopUI" hidden>
       <div class="stop"><button class="sback" id="shopBack" aria-label="Terug"><svg viewBox="0 0 24 24" width="28" height="28"><path d="M15 5l-7 7 7 7" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="sbal" id="shopBal"></div></div>
       <div class="sheet2"><div class="sw" id="shopCols"></div><div class="row" id="shopItems"></div><button class="buy" id="shopBuy" hidden></button></div>
@@ -4720,6 +4720,10 @@ function tone(f,d,type,vol,when,f2){const a=A();if(!a)return;toneAt(a.currentTim
 let nbuf=null;
 function noiseAt(t,d,vol,hp,dest){const a=ac;if(!a)return;if(!nbuf){nbuf=a.createBuffer(1,a.sampleRate,a.sampleRate);const c=nbuf.getChannelData(0);for(let i=0;i<c.length;i++)c[i]=Math.random()*2-1;}
   const s=a.createBufferSource();s.buffer=nbuf;const f=a.createBiquadFilter();f.type='highpass';f.frequency.value=hp||900;const g=a.createGain();g.gain.setValueAtTime(vol||.25,t);g.gain.exponentialRampToValueAtTime(.001,t+d);s.connect(f).connect(g).connect(dest||master);s.start(t);s.stop(t+d+.02);}
+function trumpet(vol){const a=A();if(!a)return;const t=a.currentTime+.02;const f=a.createBiquadFilter(),g=a.createGain(),lf=a.createOscillator(),lg=a.createGain();f.type='bandpass';f.frequency.value=950;f.Q.value=1.3;
+  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.12);g.gain.setValueAtTime(vol,t+.9);g.gain.exponentialRampToValueAtTime(.0001,t+1.35);lf.frequency.value=7;lg.gain.value=16;lf.connect(lg);
+  [['sawtooth',1],['square',1.006]].forEach(([ty,m])=>{const o=a.createOscillator();o.type=ty;const fr=o.frequency;fr.setValueAtTime(240*m,t);fr.linearRampToValueAtTime(540*m,t+.16);fr.linearRampToValueAtTime(480*m,t+.85);fr.linearRampToValueAtTime(360*m,t+1.3);lg.connect(fr);o.connect(f);o.start(t);o.stop(t+1.4);});
+  f.connect(g).connect(master);lf.start(t);lf.stop(t+1.4);}
 function whistle(when){const a=A();if(!a)return;const t=a.currentTime+(when||0);[[0,.3],[.42,.8]].forEach(([s0,d])=>{const o=a.createOscillator(),l=a.createOscillator(),lg=a.createGain(),g=a.createGain();o.type='sine';o.frequency.value=2900;l.type='triangle';l.frequency.value=29;lg.gain.value=280;l.connect(lg).connect(o.frequency);
   g.gain.setValueAtTime(0,t+s0);g.gain.linearRampToValueAtTime(.15,t+s0+.025);g.gain.setValueAtTime(.15,t+s0+d-.06);g.gain.linearRampToValueAtTime(0,t+s0+d);o.connect(g).connect(master);o.start(t+s0);l.start(t+s0);o.stop(t+s0+d+.05);l.stop(t+s0+d+.05);});}
 function noise(d,vol){const a=A();if(!a)return;noiseAt(a.currentTime,d,vol);}
@@ -4780,7 +4784,7 @@ function voiceScore(v){const n=(v.name+' '+v.voiceURI).toLowerCase();let sc=0;if
   if(v.lang.toLowerCase().replace('_','-')==='nl-nl')sc+=2;return sc;}
 function bestVoice(){const vs=nlVoices();if(!vs.length)return null;if(S.voice){const f=vs.find(v=>(v.voiceURI||v.name)===S.voice)||vs.find(v=>v.name===S.voice);if(f)return f;}return vs.slice().sort((a,b)=>voiceScore(b)-voiceScore(a))[0];}
 /* ---------- zelf ingesproken zinnen (opgeslagen op dit toestel) ---------- */
-const PHRASES=[["Oeps! Die blauwe auto rijdt netjes.", "Politie en boef"], ["Daar gaat de boef! Rij er snel achteraan!", "Politie en boef"], ["Snel! De politie zit achter je. Rij naar de schuilplaats en gooi dingen uit de auto!", "Politie en boef"], ["Oeps!", "Politie en boef"], ["Gepakt! Goed zo, Finn!", "Politie en boef"], ["Ontsnapt!", "Politie en boef"], ["Kies een missie!", "Garage en menu"], ["Alles is gewist. Veel plezier!", "Garage en menu"], ["De politie en de brandweer zijn er al. Nu ben jij aan de beurt!", "Ambulance"], ["Het komt goed, hoor!", "Ambulance"], ["Zo, een mooi verband!", "Ambulance"], ["Lekker warm!", "Ambulance"], ["Hup, naar het ziekenhuis! Druk maar op de sirene!", "Ambulance"], ["Eerst de boef vangen! Tik op de boef.", "Politie"], ["Oké, oké, ik geef me over!", "Politie"], ["Klik! Je bent aangehouden, meneer de boef.", "Politie"], ["Ja! Dat is de fiets van Tim!", "Politie"], ["Mijn fiets!", "Politie"], ["Ring ring! Dankjewel, agent Finn!", "Politie"], ["Ja! Je hebt Sanne gevonden!", "Politie"], ["Sanne! Daar ben je!", "Politie"], ["Dankjewel, agent Finn!", "Politie"], ["Oei! De auto is helemaal vies geworden. We gaan zo naar de wasstraat!", "Wasstraat"], ["Een andere weg! De gele pijl wijst je de nieuwe route.", "Onderweg"], ["Oeps, verkeerde weg! Volg de gele pijl.", "Onderweg"], ["Je bent er! Blus het vuur. Tik op de vlammen!", "Brandweer"], ["Je bent er! De vuilnisbak staat in brand. Tik op de vlammen!", "Brandweer"], ["Daar is de boef met de fiets! Tik op hem om hem te vangen!", "Politie"], ["Alle stations gehad! Goed gedaan, machinist Finn!", "Trein"], ["De deuren zijn dicht. Duw de hendel omhoog en rij naar het volgende station.", "Trein"], ["Let op, het sein is rood! Rem maar af en wacht.", "Trein"], ["Stop! Het sein is rood. We wachten even.", "Trein"], ["Groen! Rijden maar.", "Trein"], ["Daar komt het station! Trek de hendel naar beneden om te remmen bij de groene pijl.", "Trein"], ["Oeps, een beetje te ver! We rijden even terug.", "Trein"], ["Zo! Nu staan we goed. Druk op de deurknop.", "Trein"], ["Iedereen is ingestapt! Druk op de knop om de deuren dicht te doen.", "Trein"], ["Welkom in de wasstraat! Eerst de spons. Veeg over de auto en maak hem vol schuim!", "Wasstraat"], ["Goed zo! Nu spoelen we het schuim eraf met water. Veeg maar!", "Wasstraat"], ["Bijna klaar! Droog de auto met de doek.", "Wasstraat"], ["Wauw! Wat glimt hij mooi! Goed gedaan!", "Wasstraat"], ["De auto is weer schoon. Rij maar weer rond!", "Wasstraat"], ["Draai aan het stuur! Volg de gele pijl.", "Onderweg"], ["Hoor je dat? De ambulance komt eraan!", "Brandweer"], ["We zijn er! De brandweermannen stappen uit en pakken de slangen.", "Brandweer"], ["De slangen liggen klaar. Tik op de vlammen om ze te blussen met schuim!", "Brandweer"], ["De brandweerman klimt naar boven!", "Brandweer"], ["Pak mijn hand maar, mevrouw!", "Brandweer"], ["Rustig aan. Stapje voor stapje naar beneden.", "Brandweer"], ["Dankjewel, brandweer! Je hebt me gered!", "Brandweer"], ["De brandweerman klimt de ladder op!", "Brandweer"], ["Kom maar poesje, ik heb je!", "Brandweer"], ["Hebbes! Nu voorzichtig naar beneden.", "Brandweer"], ["Alsjeblieft, hier is je poes!", "Brandweer"], ["Dankjewel brandweer! Mijn poes is weer veilig!", "Brandweer"], ["Hoera! Kom maar, poesje!", "Brandweer"], ["Het vuur is uit en iedereen is veilig. Dankjewel, brandweer!", "Brandweer"], ["Goed gericht! Tik nu om de ladder omhoog te doen.", "Brandweer"], ["Daar is de ambulance ook. Die helpt de bestuurder van de auto.", "Brandweer"], ["Jij bent de machinist! Duw de rode hendel omhoog om te rijden. Bij het station trek je hem naar beneden om te remmen.", "Trein"], ["Je bent bij de kazerne. Rij maar lekker rond door de stad! Bij een kruispunt kies je zelf de weg. Als er een melding komt, hoor je de portofoon.", "Brandweer"], ["Tik op een auto, dan mag de hele rij rijden.", "Onderweg"], ["Wacht even! Er rijdt nog een auto over het kruispunt.", "Onderweg"], ["Goed zo! De hulpdienst kan door.", "Onderweg"], ["Welkom Finn! Kies een voertuig.", "Garage en menu"], ["Raak!", "Politie en boef"], ["Glibber glibber!", "Politie en boef"], ["Haha!", "Politie en boef"], ["Nee, dat is niet de fiets van Tim.", "Politie"], ["Die is het niet. Kijk nog eens goed!", "Politie"], ["Nee hoor, ik ben Sanne niet!", "Politie"], ["Ik ben Sanne niet. Zoek nog maar even!", "Politie"], ["Nee, ik heet geen Sanne!", "Politie"], ["Goed zo!", "Politie en boef"], ["Lekker rijden!", "Onderweg"], ["Kijk eens rond in de stad!", "Onderweg"], ["Super!", "Politie en boef"], ["Ja, die kant op!", "Onderweg"], ["De deuren zijn open. Iedereen stapt in!", "Trein"], ["Instappen maar!", "Trein"], ["Kijk, de mensen stappen in!", "Trein"], ["Nog een paar!", "Brandweer"], ["Melding! Er is brand in een huis. Zet de sirene aan en rij er snel naartoe. Volg de gele pijl!", "Brandweer"], ["Melding! Brand in de woonwijk, en er staat iemand op het balkon! Snel, rij erheen. Volg de gele pijl!", "Brandweer"], ["Melding! Een poesje zit vast in een hoge boom. Rij erheen en help het poesje!", "Brandweer"], ["Melding! Brand bij het tankstation! Een auto is tegen de pomp gereden. Snel erheen, volg de gele pijl!", "Brandweer"], ["Melding! Brand in een grote loods op het bedrijventerrein! Rij er snel naartoe, volg de gele pijl!", "Brandweer"], ["Melding! Er staat een vuilnisbak in brand! Rij er snel naartoe. Volg de gele pijl!", "Brandweer"], ["Tijd voor de wasstraat! Rij er naartoe, volg de gele pijl. Dan maken we de auto weer helemaal schoon!", "Brandweer"], ["De politieauto! Tatuu tatuu!", "Garage en menu"], ["De brandweerauto! Met een lange ladder.", "Garage en menu"], ["De auto van de boef! Kun jij ontsnappen?", "Garage en menu"], ["De ambulance! Die helpt mensen die gewond zijn.", "Garage en menu"], ["De trein! Tuut tuut, instappen!", "Garage en menu"]];
+const PHRASES=[["Daar is een tunnel! We rijden erin. Tuut tuut!", "Trein"],["Kijk, een tunnel! Het wordt even donker.", "Trein"],["Kijk, de dierentuin! Zie je de giraf?", "Trein"],["Wauw, we rijden door de dierentuin!", "Trein"],["Kijk, de giraf komt kijken! Hoi giraf!", "Trein"],["De giraf zegt hallo! Zwaai maar!", "Trein"],["Toeteroe! Wat een grote olifant!", "Trein"],["Hoor je de olifant toeteren?", "Trein"],["Door de tunnel! Nu ben je aan de andere kant van de stad.", "Brandweer"],["Joepie, een tunnel!", "Brandweer"],["Oeps! Die blauwe auto rijdt netjes.", "Politie en boef"], ["Daar gaat de boef! Rij er snel achteraan!", "Politie en boef"], ["Snel! De politie zit achter je. Rij naar de schuilplaats en gooi dingen uit de auto!", "Politie en boef"], ["Oeps!", "Politie en boef"], ["Gepakt! Goed zo, Finn!", "Politie en boef"], ["Ontsnapt!", "Politie en boef"], ["Kies een missie!", "Garage en menu"], ["Alles is gewist. Veel plezier!", "Garage en menu"], ["De politie en de brandweer zijn er al. Nu ben jij aan de beurt!", "Ambulance"], ["Het komt goed, hoor!", "Ambulance"], ["Zo, een mooi verband!", "Ambulance"], ["Lekker warm!", "Ambulance"], ["Hup, naar het ziekenhuis! Druk maar op de sirene!", "Ambulance"], ["Eerst de boef vangen! Tik op de boef.", "Politie"], ["Oké, oké, ik geef me over!", "Politie"], ["Klik! Je bent aangehouden, meneer de boef.", "Politie"], ["Ja! Dat is de fiets van Tim!", "Politie"], ["Mijn fiets!", "Politie"], ["Ring ring! Dankjewel, agent Finn!", "Politie"], ["Ja! Je hebt Sanne gevonden!", "Politie"], ["Sanne! Daar ben je!", "Politie"], ["Dankjewel, agent Finn!", "Politie"], ["Oei! De auto is helemaal vies geworden. We gaan zo naar de wasstraat!", "Wasstraat"], ["Een andere weg! De gele pijl wijst je de nieuwe route.", "Onderweg"], ["Oeps, verkeerde weg! Volg de gele pijl.", "Onderweg"], ["Je bent er! Blus het vuur. Tik op de vlammen!", "Brandweer"], ["Je bent er! De vuilnisbak staat in brand. Tik op de vlammen!", "Brandweer"], ["Daar is de boef met de fiets! Tik op hem om hem te vangen!", "Politie"], ["Alle stations gehad! Goed gedaan, machinist Finn!", "Trein"], ["De deuren zijn dicht. Duw de hendel omhoog en rij naar het volgende station.", "Trein"], ["Let op, het sein is rood! Rem maar af en wacht.", "Trein"], ["Stop! Het sein is rood. We wachten even.", "Trein"], ["Groen! Rijden maar.", "Trein"], ["Daar komt het station! Trek de hendel naar beneden om te remmen bij de groene pijl.", "Trein"], ["Oeps, een beetje te ver! We rijden even terug.", "Trein"], ["Zo! Nu staan we goed. Druk op de deurknop.", "Trein"], ["Iedereen is ingestapt! Druk op de knop om de deuren dicht te doen.", "Trein"], ["Welkom in de wasstraat! Eerst de spons. Veeg over de auto en maak hem vol schuim!", "Wasstraat"], ["Goed zo! Nu spoelen we het schuim eraf met water. Veeg maar!", "Wasstraat"], ["Bijna klaar! Droog de auto met de doek.", "Wasstraat"], ["Wauw! Wat glimt hij mooi! Goed gedaan!", "Wasstraat"], ["De auto is weer schoon. Rij maar weer rond!", "Wasstraat"], ["Draai aan het stuur! Volg de gele pijl.", "Onderweg"], ["Hoor je dat? De ambulance komt eraan!", "Brandweer"], ["We zijn er! De brandweermannen stappen uit en pakken de slangen.", "Brandweer"], ["De slangen liggen klaar. Tik op de vlammen om ze te blussen met schuim!", "Brandweer"], ["De brandweerman klimt naar boven!", "Brandweer"], ["Pak mijn hand maar, mevrouw!", "Brandweer"], ["Rustig aan. Stapje voor stapje naar beneden.", "Brandweer"], ["Dankjewel, brandweer! Je hebt me gered!", "Brandweer"], ["De brandweerman klimt de ladder op!", "Brandweer"], ["Kom maar poesje, ik heb je!", "Brandweer"], ["Hebbes! Nu voorzichtig naar beneden.", "Brandweer"], ["Alsjeblieft, hier is je poes!", "Brandweer"], ["Dankjewel brandweer! Mijn poes is weer veilig!", "Brandweer"], ["Hoera! Kom maar, poesje!", "Brandweer"], ["Het vuur is uit en iedereen is veilig. Dankjewel, brandweer!", "Brandweer"], ["Goed gericht! Tik nu om de ladder omhoog te doen.", "Brandweer"], ["Daar is de ambulance ook. Die helpt de bestuurder van de auto.", "Brandweer"], ["Jij bent de machinist! Duw de rode hendel omhoog om te rijden. Bij het station trek je hem naar beneden om te remmen.", "Trein"], ["Je bent bij de kazerne. Rij maar lekker rond door de stad! Bij een kruispunt kies je zelf de weg. Als er een melding komt, hoor je de portofoon.", "Brandweer"], ["Tik op een auto, dan mag de hele rij rijden.", "Onderweg"], ["Wacht even! Er rijdt nog een auto over het kruispunt.", "Onderweg"], ["Goed zo! De hulpdienst kan door.", "Onderweg"], ["Welkom Finn! Kies een voertuig.", "Garage en menu"], ["Raak!", "Politie en boef"], ["Glibber glibber!", "Politie en boef"], ["Haha!", "Politie en boef"], ["Nee, dat is niet de fiets van Tim.", "Politie"], ["Die is het niet. Kijk nog eens goed!", "Politie"], ["Nee hoor, ik ben Sanne niet!", "Politie"], ["Ik ben Sanne niet. Zoek nog maar even!", "Politie"], ["Nee, ik heet geen Sanne!", "Politie"], ["Goed zo!", "Politie en boef"], ["Lekker rijden!", "Onderweg"], ["Kijk eens rond in de stad!", "Onderweg"], ["Super!", "Politie en boef"], ["Ja, die kant op!", "Onderweg"], ["De deuren zijn open. Iedereen stapt in!", "Trein"], ["Instappen maar!", "Trein"], ["Kijk, de mensen stappen in!", "Trein"], ["Nog een paar!", "Brandweer"], ["Melding! Er is brand in een huis. Zet de sirene aan en rij er snel naartoe. Volg de gele pijl!", "Brandweer"], ["Melding! Brand in de woonwijk, en er staat iemand op het balkon! Snel, rij erheen. Volg de gele pijl!", "Brandweer"], ["Melding! Een poesje zit vast in een hoge boom. Rij erheen en help het poesje!", "Brandweer"], ["Melding! Brand bij het tankstation! Een auto is tegen de pomp gereden. Snel erheen, volg de gele pijl!", "Brandweer"], ["Melding! Brand in een grote loods op het bedrijventerrein! Rij er snel naartoe, volg de gele pijl!", "Brandweer"], ["Melding! Er staat een vuilnisbak in brand! Rij er snel naartoe. Volg de gele pijl!", "Brandweer"], ["Tijd voor de wasstraat! Rij er naartoe, volg de gele pijl. Dan maken we de auto weer helemaal schoon!", "Brandweer"], ["De politieauto! Tatuu tatuu!", "Garage en menu"], ["De brandweerauto! Met een lange ladder.", "Garage en menu"], ["De auto van de boef! Kun jij ontsnappen?", "Garage en menu"], ["De ambulance! Die helpt mensen die gewond zijn.", "Garage en menu"], ["De trein! Tuut tuut, instappen!", "Garage en menu"]];
 const VKEY=t=>String(t).toLowerCase().replace(/\s+/g,' ').trim();
 const VREC={db:null,keys:new Set(),urls:{},audio:null,list:[],rec:null,stream:null,idx:-1,timer:null,filt:'all',msg:''};
 function vdb(){return new Promise((res,rej)=>{if(VREC.db)return res(VREC.db);if(!window.indexedDB)return rej('geen opslag');const r=indexedDB.open('finnStem',1);r.onupgradeneeded=()=>r.result.createObjectStore('rec');r.onsuccess=()=>{VREC.db=r.result;res(VREC.db);};r.onerror=()=>rej(r.error);});}
@@ -5374,7 +5378,7 @@ function openSettings(sure){$('sheetKick').textContent='Spel';$('sheetTitle').te
     <div class="srow"><button class="sbtn sdanger${sure?' sure':''}" data-reset="${sure?2:1}">${sure?'Ja, wis alles':'Spel resetten'}</button>${sure?'<button class="sbtn" data-cancel>Nee, toch niet</button>':''}</div>
     </div><div class="sset"><div class="slab">Zelf inspreken</div><div class="snote">Spreek de zinnen van het spel zelf in. Dan hoort Finn jouw stem in plaats van de computerstem.</div>
     <div class="srow"><button class="sbtn" data-openrec>Zinnen inspreken${VREC.keys.size?' ('+VREC.keys.size+' klaar)':''}</button></div>
-    <div class="snote" style="margin-top:8px">Versie v9.0</div></div>`;$('sheet').hidden=false;}
+    <div class="snote" style="margin-top:8px">Versie v9.2</div></div>`;$('sheet').hidden=false;}
 const MICI='<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',STOPI='<svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>',PLAYI='<svg viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z" fill="currentColor"/></svg>',DELI='<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
 const VCATS=['Garage en menu','Onderweg','Politie','Politie en boef','Brandweer','Ambulance','Trein','Wasstraat'];
 function vCat(t){const k=VKEY(t);return PCAT[k]||(S.heardCat&&S.heardCat[k])||'Garage en menu';}
@@ -6391,14 +6395,15 @@ function candyBG(){const T=THREE;const c=document.createElement('canvas');c.widt
 /* regen (expertstand): druppels rond een punt, grijze lucht en regengeluid */
 /* zacht, doorlopend regengeluid (ruis + druppeltjes), stopt vanzelf als er niet meer geregend wordt */
 const RAINA={src:null,g:null,last:0,tm:null,buf:null};
-function rainBuf(a){if(RAINA.buf)return RAINA.buf;const sr=a.sampleRate,n=Math.floor(sr*6),F=Math.floor(sr*.4),b=a.createBuffer(2,n,sr);
-  for(let c=0;c<2;c++){const d=new Float32Array(n+F);let l=0,p=0;for(let i=0;i<n+F;i++){const w=Math.random()*2-1;l=(l+.02*w)/1.02;p=.97*p+.03*w;d[i]=l*3.5+p*.9+w*.05;}
-    for(let k=0;k<160;k++){const q=Math.floor(Math.random()*(n+F-1200)),f=1800+Math.random()*3200,am=.05+Math.random()*.1,dc=40+Math.random()*80;for(let j=0;j<1100;j++)d[q+j]+=Math.sin(j/sr*f*6.2832)*am*Math.exp(-j/dc);}
+function rainBuf(a){if(RAINA.buf)return RAINA.buf;const sr=a.sampleRate,n=Math.floor(sr*6),F=Math.floor(sr*.4),N=n+F,b=a.createBuffer(2,n,sr),R=Math.random;
+  for(let c=0;c<2;c++){const d=new Float32Array(N);let p=0;for(let i=0;i<N;i++){p=.95*p+.05*(R()*2-1);d[i]=p*.35;}
+    for(let k=0;k<700;k++){const q=Math.floor(R()*(N-400)),amp=(.03+R()*.11)*(R()<.08?2.2:1)*(R()<.5?1:-1),dc=8+R()*18,f=(2500+R()*4500)*6.2832/sr,ph=R()*6;for(let j=0;j<400;j++)d[q+j]+=Math.sin(j*f+ph)*amp*Math.exp(-j/dc);}
+    for(let k=0;k<26;k++){const q=Math.floor(R()*(N-3000)),f0=900+R()*800,am=.05+R()*.05;let ph=0;for(let j=0;j<3000;j++){ph+=f0*(1+.25*Math.exp(-j/300))*6.2832/sr;d[q+j]+=Math.sin(ph)*am*Math.exp(-j/450);}}
     for(let i=0;i<F;i++){const t=i/F;d[i]=d[i]*t+d[n+i]*(1-t);}b.getChannelData(c).set(d.subarray(0,n));}
   return RAINA.buf=b;}
 function rainPing(){const a=A();if(!a)return;RAINA.last=performance.now();
-  if(!RAINA.src){const s=a.createBufferSource();s.buffer=rainBuf(a);s.loop=true;const hp=a.createBiquadFilter();hp.type='highpass';hp.frequency.value=160;const lp=a.createBiquadFilter();lp.type='lowpass';lp.frequency.value=3200;lp.Q.value=.4;
-    const g=a.createGain();g.gain.setValueAtTime(0,a.currentTime);g.gain.linearRampToValueAtTime(.16,a.currentTime+1.5);s.connect(hp).connect(lp).connect(g).connect(master);s.start();RAINA.src=s;RAINA.g=g;}
+  if(!RAINA.src){const s=a.createBufferSource();s.buffer=rainBuf(a);s.loop=true;const hp=a.createBiquadFilter();hp.type='highpass';hp.frequency.value=400;const lp=a.createBiquadFilter();lp.type='lowpass';lp.frequency.value=6500;lp.Q.value=.5;
+    const g=a.createGain();g.gain.setValueAtTime(0,a.currentTime);g.gain.linearRampToValueAtTime(.45,a.currentTime+1.5);s.connect(hp).connect(lp).connect(g).connect(master);s.start();RAINA.src=s;RAINA.g=g;}
   if(!RAINA.tm)RAINA.tm=setInterval(()=>{if(performance.now()-RAINA.last>500){clearInterval(RAINA.tm);RAINA.tm=null;const s=RAINA.src,g=RAINA.g;RAINA.src=null;RAINA.g=null;if(s&&ac){const t=ac.currentTime;try{g.gain.cancelScheduledValues(t);g.gain.setValueAtTime(g.gain.value,t);g.gain.linearRampToValueAtTime(0,t+.6);s.stop(t+.7);}catch(e){}}}},250);}
 function rainRoll(){return S.level==='expert'&&Math.random()<.55;}
 function makeRain(scene,N,box,sl){sl=sl||[.12,.05];const T=THREE;N=N||1800;box=box||[44,24,44];const g=new T.BufferGeometry(),a=new Float32Array(N*6);
@@ -6544,15 +6549,17 @@ function startCity(m){
       if(g.t==='L')return {x:g.ax+g.hx*u,z:g.az+g.hz*u,hx:g.hx,hz:g.hz};const a=g.a0+(g.a1-g.a0)*(u/g.len),sg=Math.sign(g.a1-g.a0);return {x:g.cx+Math.cos(a)*R,z:g.cz+Math.sin(a)*R,hx:-Math.sin(a)*sg,hz:Math.cos(a)*sg};};
     const sOn=(i,x,z)=>{const q=segs[i];return q.s0+(x-q.ax)*q.hx+(z-q.az)*q.hz;};
     return {xW,xE,zS,zN,R,L,at,segs,sOn};})():null;
+  const ZOO=TRN?(()=>{const q=TR_.segs[6];return {q,x:TR_.xW,zt:TR_.zN-TR_.R,tin:q.s0+4,tout:q.s0+40,bias:0};})():null;
+  const inZoo=(x,z)=>!!ZOO&&x>ZOO.x-78&&x<ZOO.x+13&&z<ZOO.zt-4&&z>ZOO.zt-128;
   const XS=[];{const RAILS0=!!(ASSETS&&ASSETS.ok&&FWA_HDR.m['train/track']);if(RAILS0){const cl=(v,a,b)=>Math.max(a+1,Math.min(b-1,v)),gxm=Math.round((gx0+gx1)/2),gzm=Math.round((gz0+gz1)/2);
-    const xs=cl(gxm+2,gx0,gx1),xn=cl(gxm-2,gx0,gx1),zw=cl(gzm+2,gz0,gz1),ze=cl(gzm-2,gz0,gz1);
+    const xs=cl(gxm+2,gx0,gx1),xn=cl(gxm-2,gx0,gx1),zw=TRN?cl(gzm-2,gz0,gz1):cl(gzm+2,gz0,gz1),ze=cl(gzm-2,gz0,gz1);
     XS.push({ax:'z',line:xs,rc:(gz0-.5)*B,out:-1,cx:xs*B,cz:(gz0-.5)*B,seg:0},{ax:'z',line:xn,rc:(gz1+.5)*B,out:1,cx:xn*B,cz:(gz1+.5)*B,seg:4},
             {ax:'x',line:zw,rc:(gx0-.5)*B,out:-1,cx:(gx0-.5)*B,cz:zw*B,seg:6},{ax:'x',line:ze,rc:(gE+.5)*B,out:1,cx:(gE+.5)*B,cz:ze*B,seg:2});}}
   const XL={};XS.forEach(X=>{XL[X.ax+':'+X.line]=X;if(TR_)X.s=TR_.sOn(X.seg,X.cx,X.cz);});
   const xRoad=(railAx,rc,lineCoord)=>XS.some(X=>(X.ax==='z'?'x':'z')===railAx&&X.rc===rc&&X.line===lineCoord);
   /* stations (alleen trein-missie) */
   const NST=S.level==='beginner'?2:S.level==='expert'?4:3;
-  const STN=TRN?(NST===2?[[0,.3],[4,.3]]:NST===3?[[0,.3],[2,.62],[4,.3]]:[[0,.3],[2,.62],[4,.3],[6,.62]]).map(([si,f])=>{const q=TR_.segs[si];return {si,sP:q.s0+q.len*f};}):[];
+  const STN=TRN?(NST===2?[[0,.3],[4,.3]]:NST===3?[[0,.3],[2,.62],[4,.3]]:[[0,.3],[2,.62],[4,.3],[6,.88]]).map(([si,f])=>{const q=TR_.segs[si];return {si,sP:q.s0+q.len*f};}):[];
   const nearStn=(x,z)=>STN.some(o=>{const p=TR_.at(o.sP);return Math.hypot(p.x-x,p.z-z)<30;});
   const outerInd=[],outerMills=[],trkInd=[];const RAILS=!!(ASSETS&&ASSETS.ok&&FWA_HDR.m['train/track']);const railLines=[];
   {const RR=3,inJ=(x,z)=>x>=gx0&&x<=gx1&&z>=gz0&&z<=gz1,inBlk=(x,z)=>x>=gx0&&x<gx1&&z>=gz0&&z<gz1;
@@ -6570,6 +6577,7 @@ function startCity(m){
         else{const tall=Math.random()<.5;const cols2=CANDY?['#ff9ac6','#b7ef8a','#ffd27a','#b9a6ff','#8fe0ff','#ffb19a','#fff08a']:['#e8e2d0','#d9c7a8','#c98a5a','#b4553c','#9fb7c9','#d0d4da','#e6c99a'];
           if(tall)[[-4.2,-4.2],[4.2,-4.2],[-4.2,4.2],[4.2,4.2]].forEach(([ox,oz])=>{const hh=10+Math.random()*16;rBld.push({x:cx+ox,z:cz+oz,y:hh/2,sx:7.6,sy:hh,sz:7.6,c:rnd(cols2)});});
           else{const hh=8+Math.random()*8,c=rnd(cols2);[-1,1].forEach(k=>rBld.push({x:cx,z:cz+k*4.6,y:hh/2,sx:16.5,sy:hh,sz:6.8,c,r:0}));}}}}
+    if(ZOO){[rRoads,rJunc,rBlocks,rBld,rTrunk,rCrown,rPark,rPond].forEach(a=>{for(let i=a.length-1;i>=0;i--)if(inZoo(a[i].x,a[i].z))a.splice(i,1);});[outerInd,outerMills].forEach(a=>{for(let i=a.length-1;i>=0;i--)if(inZoo(a[i][0],a[i][1]))a.splice(i,1);});}
     const rg2=new T.PlaneGeometry(RW,B-RW);rg2.rotateX(-Math.PI/2);const jg2=new T.PlaneGeometry(RW,RW);jg2.rotateX(-Math.PI/2);
     inst(rg2,new T.MeshStandardMaterial({map:roadT,roughness:.85}),rRoads);inst(jg2,new T.MeshStandardMaterial({map:aspT,roughness:.85}),rJunc);
     inst(new T.BoxGeometry(B-RW,.26,B-RW),new T.MeshStandardMaterial({map:pavT,roughness:.9}),rBlocks);
@@ -7022,9 +7030,20 @@ function startCity(m){
   nodes.forEach(n=>{if(!n.decide)return;n.blocked.forEach(o=>{const g=new T.Group();g.position.set(n.gx*B+DV[o][0]*(RW/2+2),0,n.gz*B+DV[o][1]*(RW/2+2));g.rotation.y=Math.atan2(DV[o][0],DV[o][1]);scene.add(g);
     [-4.2,4.2].forEach(x=>{box(g,.15,1.2,.15,TRIM,x,.6,0);box(g,.6,.1,.6,BLACK,x,.05,0);K.light(g,.2,.2,.2,x,1.35,0,'#ff9a1a','#3a2000');});box(g,8.8,.45,.1,stripeM,0,.95,0);
     [-2.5,0,2.5].forEach(x=>K.cone3(g,x,0,1.2,1.5));});});
-  for(let gx=gx0;gx<=gx1;gx++)for(let gz=gz0;gz<=gz1;gz++)for(let o=0;o<4;o++){if(inB(gx+DV[o][0],gz+DV[o][1]))continue;if(gx===0&&gz<=gz0+1&&o===2)continue;if(XS.some(X=>X.ax==='z'?(gx===X.line&&((X.out<0&&o===2&&gz===gz0)||(X.out>0&&o===0&&gz===gz1))):(gz===X.line&&((X.out<0&&o===3&&gx===gx0)||(X.out>0&&o===1&&gx===gx1)))))continue;
+  const tunL=[];for(let gx=gx0;gx<=gx1;gx++)for(let gz=gz0;gz<=gz1;gz++)for(let o=0;o<4;o++){if(inB(gx+DV[o][0],gz+DV[o][1]))continue;if(!FREE&&gx===0&&gz<=gz0+1&&o===2)continue;if(XS.some(X=>X.ax==='z'?(gx===X.line&&((X.out<0&&o===2&&gz===gz0)||(X.out>0&&o===0&&gz===gz1))):(gz===X.line&&((X.out<0&&o===3&&gx===gx0)||(X.out>0&&o===1&&gx===gx1)))))continue;
+    if(FREE){tunL.push([gx,gz,o]);continue;}
     const g=new T.Group();g.position.set(gx*B+DV[o][0]*(RW/2+1.2),0,gz*B+DV[o][1]*(RW/2+1.2));g.rotation.y=Math.atan2(DV[o][0],DV[o][1]);scene.add(g);
     [-4.2,4.2].forEach(x=>{box(g,.15,1.2,.15,TRIM,x,.6,0);box(g,.6,.1,.6,BLACK,x,.05,0);});box(g,8.8,.45,.1,stripeM,0,.95,0);}
+  if(tunL.length){const arch=(s,w,h,y0)=>{s.moveTo(-w,y0);s.lineTo(w,y0);s.lineTo(w,h-w);s.absarc(0,h-w,w,0,Math.PI,false);s.lineTo(-w,y0);return s;};
+    const hs=new T.Shape();hs.moveTo(-12,-.5);hs.lineTo(12,-.5);hs.lineTo(12,0);hs.absellipse(0,0,12,10.5,0,Math.PI,false);hs.lineTo(-12,-.5);hs.holes.push(arch(new T.Path(),3.6,8.2,-.4));
+    const hill=new T.ExtrudeGeometry(hs,{depth:9,bevelEnabled:false,curveSegments:16});hill.translate(0,0,6.6);
+    const fs=new T.Shape();fs.moveTo(-6,-.3);fs.lineTo(6,-.3);fs.lineTo(6,9.6);fs.lineTo(-6,9.6);fs.lineTo(-6,-.3);fs.holes.push(arch(new T.Path(),3.6,8.2,-.2));
+    const frame=new T.ExtrudeGeometry(fs,{depth:.8,bevelEnabled:true,bevelThickness:.12,bevelSize:.12,bevelSegments:1,curveSegments:16});frame.translate(0,0,6.0);
+    const ls=arch(new T.Shape(),3.58,8.18,-.3);ls.holes.push(arch(new T.Path(),3.45,8.05,-.2));const lining=new T.ExtrudeGeometry(ls,{depth:8.9,bevelEnabled:false,curveSegments:16});lining.translate(0,0,6.65);
+    const endG=new T.PlaneGeometry(7.6,8.8);endG.rotateY(Math.PI);endG.translate(0,4.2,12.6);
+    const dm=new T.Object3D();[[hill,STD(NIGHT?'#2c5a2a':'#5fb04c',{roughness:1})],[frame,STD(NIGHT?'#6f6a62':'#b8ad9b',{roughness:.9})],[lining,STD('#2a2a33',{roughness:1})],[endG,new T.MeshBasicMaterial({color:'#050508'})]].forEach(([geo,mat])=>{
+      const im=new T.InstancedMesh(geo,mat,tunL.length);tunL.forEach(([gx,gz,o],i)=>{dm.position.set(gx*B,0,gz*B);dm.rotation.set(0,Math.atan2(DV[o][0],DV[o][1]),0);dm.updateMatrix();im.setMatrixAt(i,dm.matrix);});
+      im.instanceMatrix.needsUpdate=true;im.receiveShadow=geo!==endG;scene.add(im);});}
 
   /* ---- gele pijl ---- */
   const ash=new T.Shape();[[-.45,1.4],[.45,1.4],[.45,-.2],[1.1,-.2],[0,-1.5],[-1.1,-.2],[-.45,-.2]].forEach(([px,py],i)=>i?ash.lineTo(px,py):ash.moveTo(px,py));
@@ -7367,7 +7386,7 @@ const myBeac=blinkers.slice(bl0);const beacL=[];if(NIGHT){[-1,1].forEach(k=>{con
   let tgtN=null;for(let k=nodes.length-2;k>=0;k--)if(!nodes[k].end){tgtN=nodes[k];break;}
   /* vrij rijden: eerst rondrijden, dan komt de melding */
   const ROAM={on:FREE,t:0,wait:({beginner:14,gevorderd:20,expert:26})[S.level]||18};
-  const freeNode=(gx,gz,d)=>{const n={gx,gz,decide:false,blocked:[],inDir:d,free:true};if(!inB(gx+DV[d][0],gz+DV[d][1])){const o=[LEFT(d),RIGHT(d)].filter(o=>inB(gx+DV[o][0],gz+DV[o][1]));n.decide=true;n.correct=o.length?o[Math.floor(Math.random()*o.length)]:LEFT(d);}return n;};
+  const freeNode=(gx,gz,d)=>{const n={gx,gz,decide:false,blocked:[],inDir:d,free:true};if(FREE&&!inB(gx+DV[d][0],gz+DV[d][1])){n.edge=true;return n;}if(!inB(gx+DV[d][0],gz+DV[d][1])){const o=[LEFT(d),RIGHT(d)].filter(o=>inB(gx+DV[o][0],gz+DV[o][1]));n.decide=true;n.correct=o.length?o[Math.floor(Math.random()*o.length)]:LEFT(d);}return n;};
   if(FREE)nodes=[freeNode(0,-1,0)];
   let siteP=[endP.x+destRight[0]*10,endP.z+destRight[1]*10];
   function planPath(n,out){if(n.gx===tgtN.gx&&n.gz===tgtN.gz&&out===endP.d)return [];const sx=n.gx+DV[out][0],sz=n.gz+DV[out][1],key=(x,z,d)=>x+','+z+','+d,prev=new Map(),q=[[sx,sz,out]];prev.set(key(sx,sz,out),null);let goal=null;
@@ -7495,18 +7514,127 @@ const myBeac=blinkers.slice(bl0);const beacL=[];if(NIGHT){[-1,1].forEach(k=>{con
       for(let i=0;i<n2;i++){const kid=Math.random()<.3,hc=pk(HCs);const H=human({top:pk(TOPs),pants:pk(['#3b4252','#3d5a80','#5a4632','#222831']),skin:pk(SKs),hair:hc,brow:hc,hairStyle:pk(['short','short','long','bun']),shoes:pk(['#22252b','#f2f2f2']),bag:!kid&&Math.random()<.35?pk(['#c8925a','#e63b2e','#1d2a4a']):null,child:kid});
         const lp=new T.Vector3(-4.8-Math.random()*1.6,1.02,zf-TRAIN.len+TRAIN.len*(.1+.8*(i+.5)/n2));H.g.position.copy(lp);g.localToWorld(H.g.position);H.g.rotation.y=yaw-Math.PI/2+(Math.random()-.5)*.6;H.mode=Math.random()<.4?'wave':'idle';scene.add(H.g);H.ph=Math.random()*6;o.pax.push(H);PAX.push(H);}});
     // seinen
-    [[0,.52],[2,.42],[4,.52],[6,.42]].forEach(([si,f])=>{const q=TR_.segs[si],sS=q.s0+q.len*f,p=TR_.at(sS),n=[p.hz,-p.hx];const g=new T.Group();g.position.set(p.x+n[0]*3.4,0,p.z+n[1]*3.4);g.rotation.y=Math.atan2(-p.hx,-p.hz);scene.add(g);
+    [[0,.52],[2,.42],[4,.52],[6,.7]].forEach(([si,f])=>{const q=TR_.segs[si],sS=q.s0+q.len*f,p=TR_.at(sS),n=[p.hz,-p.hx];const g=new T.Group();g.position.set(p.x+n[0]*3.4,0,p.z+n[1]*3.4);g.rotation.y=Math.atan2(-p.hx,-p.hz);scene.add(g);
       cyl(g,.12,.12,4.4,STD('#555a63'),0,2.2,0,8);box(g,.8,1.7,.5,STD('#1b1f27'),0,4.6,0);
       const rM=new T.MeshStandardMaterial({color:lin('#5a1414'),emissive:lin('#ff2a1a'),emissiveIntensity:0,roughness:.4}),gM=new T.MeshStandardMaterial({color:lin('#10401c'),emissive:lin('#3cff6e'),emissiveIntensity:2,roughness:.4});
       add(g,new T.SphereGeometry(.26,12,8),rM,0,5.05,.24,{ns:true});add(g,new T.SphereGeometry(.26,12,8),gM,0,4.2,.24,{ns:true});SIGS.push({sS,rM,gM,red:false,dec:-1,t:0});});
     truck.visible=false;
   }
   const BIRDS=[];if(TRN){const BC=[['#8a8f99','#6d727c'],['#7a5a3c','#5c4129'],['#2b2d33','#1b1c20'],['#c9ccd2','#9aa0a8']];const bG=new T.SphereGeometry(1,10,8);
-    for(let i=0;i<26;i++){const s0=Math.random()*TR_.L,p=TR_.at(s0),side=Math.random()<.5?1:-1,off=3.6+Math.random()*4,n=[-p.hz*side,p.hx*side],c=BC[i%BC.length];
+    for(let i=0;i<26;i++){let s0=Math.random()*TR_.L;if(ZOO&&s0>ZOO.tin-10&&s0<ZOO.q.s0+130)s0=ZOO.q.s0+135+Math.random()*80;const p=TR_.at(s0),side=Math.random()<.5?1:-1,off=3.6+Math.random()*4,n=[-p.hz*side,p.hx*side],c=BC[i%BC.length];
       const g=new T.Group();const bm=STD(c[0],{roughness:.8}),wm=STD(c[1],{roughness:.8});
       const bd=add(g,bG,bm,0,.2,0,{ns:true});bd.scale.set(.16,.14,.24);const hd=add(g,bG,bm,0,.33,.17,{ns:true});hd.scale.setScalar(.1);add(g,new T.ConeGeometry(.035,.09,6),STD('#ffb020'),0,.32,.29,{ns:true}).rotation.x=Math.PI/2;
       const wl=new T.Group();wl.position.set(.1,.24,0);g.add(wl);box(wl,.3,.025,.18,wm,.15,0,0,{ns:true});const wr=new T.Group();wr.position.set(-.1,.24,0);g.add(wr);box(wr,.3,.025,.18,wm,-.15,0,0,{ns:true});
       const home=new T.Vector3(p.x+n[0]*off,.27,p.z+n[1]*off);g.position.copy(home);g.rotation.y=Math.random()*6.3;g.scale.setScalar(1.7);scene.add(g);BIRDS.push({g,wl,wr,s0,home,n,state:0,t:Math.random()*5,vel:new T.Vector3()});}}
+  /* ---- trein-missie: tunnel en dierentuin aan de westkant ---- */
+  const ZG=[],ZV=[];let stepZoo=()=>{};
+  if(ZOO){const pk=a=>a[Math.floor(Math.random()*a.length)],SKs=['#f0c39b','#c98f63','#8d5a3b','#f5d2b3'],HCs=['#2b1d12','#6b4423','#d9b26a','#1d1d1d'],TOPs=['#e63b2e','#2f7bff','#ffd21f','#3fc36b','#9b5de5','#ff8a3d'];const X=ZOO.x,Zt=ZOO.zt,zz=u=>Zt-u;
+    const mk=(geo,mat,x,y,z,sh)=>{const me=new T.Mesh(geo,mat);me.position.set(x,y,z);me.castShadow=!!sh;me.receiveShadow=true;scene.add(me);return me;};
+    const flat=(w,d,col,x,z,y)=>{const g2=new T.PlaneGeometry(w,d);g2.rotateX(-Math.PI/2);return mk(g2,STD(col,{roughness:1}),x,y||.05,z);};
+    // grond
+    flat(89.5,124,NIGHT?'#3e6a33':'#7cc35a',X-34.25,zz(66),.045);
+    flat(47.4,40,NIGHT?'#6d6540':'#d6c27a',X-28.3,zz(62),.06);   // giraffenweide
+    flat(47.4,42,NIGHT?'#5e4a34':'#bf9a68',X-28.3,zz(103),.06);  // olifantenweide
+    {const pg=new T.CircleGeometry(7,28);pg.rotateX(-Math.PI/2);mk(pg,STD('#4fb2e4',{roughness:.12,metalness:.15}),X-22,.08,zz(108));
+     const rg=new T.RingGeometry(7,7.8,28);rg.rotateX(-Math.PI/2);mk(rg,STD('#9c8f7c',{roughness:.9}),X-22,.075,zz(108));}
+    [[X-31,zz(100),1.6],[X-34,zz(96),1.1],[X-14,zz(118),1.3],[X-40,zz(116),1.8]].forEach(([x,z,r])=>{const m=mk(new T.SphereGeometry(r,10,8),STD('#8d8a84',{roughness:1}),x,r*.35,z,true);m.scale.y=.6;});
+    // hekken (paaltjes + twee planken)
+    const posts=[],WD=STD(NIGHT?'#6b4a2c':'#9a6a3c',{roughness:.9});
+    const fence=(x0,z0,x1,z1)=>{const L=Math.hypot(x1-x0,z1-z0),n=Math.max(1,Math.round(L/2.6)),a=Math.atan2(x1-x0,z1-z0);for(let i=0;i<=n;i++)posts.push([x0+(x1-x0)*i/n,z0+(z1-z0)*i/n]);
+      [.55,1.1].forEach(y=>{const m=mk(new T.BoxGeometry(.1,.14,L),WD,(x0+x1)/2,y,(z0+z1)/2);m.rotation.y=a;});};
+    const fo=X-4.6,fi=X+3.9,fb=X-52;
+    fence(fo,zz(38),fo,zz(124));fence(fi,zz(40),fi,zz(124));fence(fb,zz(40),fb,zz(124));fence(fo,zz(82),fb,zz(82));fence(fo,zz(124),fb,zz(124));fence(fo,zz(40),fb,zz(40));
+    {const im=new T.InstancedMesh(new T.BoxGeometry(.2,1.45,.2),WD,posts.length),dm=new T.Object3D();posts.forEach(([x,z],i)=>{dm.position.set(x,.72,z);dm.updateMatrix();im.setMatrixAt(i,dm.matrix);});scene.add(im);}
+    // haag achter de wei
+    mk(new T.BoxGeometry(2,2.4,122),STD(NIGHT?'#2c5a2a':'#3f8f3a',{roughness:1}),X-56,1.2,zz(65),true);
+    // bomen: acacia's bij de giraffen, gewone bomen elders
+    const TRK=STD('#7a5230',{roughness:.9}),CRN=STD(NIGHT?'#2f6a2c':'#5a9e3c',{roughness:.9}),CR2=STD(NIGHT?'#2c5f2a':'#4fae45',{roughness:.9});
+    const acacia=(x,z,s2)=>{const t1=mk(new T.CylinderGeometry(.22*s2,.32*s2,4*s2,7),TRK,x,2*s2,z,true);t1.rotation.z=.12;const c=mk(new T.SphereGeometry(1,12,8),CRN,x+.4*s2,4.3*s2,z,true);c.scale.set(3.4*s2,.75*s2,3*s2);};
+    const tree=(x,z,s2,y0)=>{y0=y0||0;mk(new T.CylinderGeometry(.22*s2,.3*s2,2.4*s2,7),TRK,x,y0+1.2*s2,z,true);mk(new T.SphereGeometry(1.9*s2,10,8),CR2,x,y0+3.5*s2,z,true);};
+    acacia(X-38,zz(50),1.1);acacia(X-44,zz(70),.95);acacia(X-24,zz(76),.85);tree(X-46,zz(92),1.1);tree(X-44,zz(118),1);
+    [[-62,12],[-70,30],[-64,52],[-72,74],[-62,96],[-70,112],[-66,20],[-24,16],[-36,20],[-50,26],[-66,40],[7,70],[7,118]].forEach(([dx,u],i)=>tree(X+dx,zz(u),.8+(i%3)*.15));
+    // hooiruif bij het hek
+    {const hx=X-6.2,hz=zz(45);mk(new T.CylinderGeometry(.14,.14,4.6,8),WD,hx,2.3,hz,true);mk(new T.BoxGeometry(1.3,.8,1.3),WD,hx,4.6,hz,true);mk(new T.BoxGeometry(1.1,.5,1.1),STD('#e3c25a',{roughness:1}),hx,5.1,hz);}
+    // tunnel: heuvel met een gat, stenen poort aan beide kanten
+    {const tg=new T.Group();tg.position.set(X,0,zz(4));tg.rotation.y=Math.PI;scene.add(tg);
+      const arch=(p,w,h,y0)=>{p.moveTo(-w,y0);p.lineTo(w,y0);p.lineTo(w,h-w);p.absarc(0,h-w,w,0,Math.PI,false);p.lineTo(-w,y0);return p;};
+      const hs=new T.Shape();hs.moveTo(-11,-.5);hs.lineTo(14,-.5);hs.lineTo(14,0);hs.absellipse(1.5,0,12.5,13,0,Math.PI,false);hs.lineTo(-11,-.5);hs.holes.push(arch(new T.Path(),4.6,10,-.4));
+      const hm=new T.Mesh(new T.ExtrudeGeometry(hs,{depth:36,bevelEnabled:false,curveSegments:18}),STD(NIGHT?'#2c5a2a':'#5fb04c',{roughness:1}));hm.receiveShadow=true;tg.add(hm);
+      const fs=new T.Shape();fs.moveTo(-6.8,-.3);fs.lineTo(6.8,-.3);fs.lineTo(6.8,11.6);fs.lineTo(-6.8,11.6);fs.lineTo(-6.8,-.3);fs.holes.push(arch(new T.Path(),4.6,10,-.2));
+      const fg=new T.ExtrudeGeometry(fs,{depth:.9,bevelEnabled:true,bevelThickness:.12,bevelSize:.12,bevelSegments:1,curveSegments:18}),FM=STD(NIGHT?'#6f6a62':'#b8ad9b',{roughness:.9});
+      [-.8,35.9].forEach(z=>{const m=new T.Mesh(fg,FM);m.position.z=z;m.castShadow=true;tg.add(m);});
+      const ls=arch(new T.Shape(),4.58,9.98,-.3);ls.holes.push(arch(new T.Path(),4.42,9.82,-.2));const lm=new T.Mesh(new T.ExtrudeGeometry(ls,{depth:36,bevelEnabled:false,curveSegments:18}),STD('#2b2b34',{roughness:1}));tg.add(lm);
+      const LM=new T.MeshStandardMaterial({color:lin('#ffcf7a'),emissive:lin('#ffb84a'),emissiveIntensity:2.2});const lg=new T.BoxGeometry(.12,.35,.8);
+      for(let z=3;z<36;z+=5)[-4.3,4.3].forEach(x=>{const m=new T.Mesh(lg,LM);m.position.set(x,5.2,z);tg.add(m);});
+      tg.updateMatrixWorld(true);[[1.5,8,12.3],[-2,20,12],[4,29,12.1]].forEach(([x,z,y])=>{const p=new T.Vector3(x,y,z);tg.localToWorld(p);tree(p.x,p.z,.9,y-.6);});}
+    // poort bij de uitgang van de dierentuin
+    {const gz=zz(124),cols=['#ff5a4e','#ffb020','#ffe14a','#4fc76a','#3fa0ff','#9a6cff'];
+      [-6.6,6.6].forEach(dx=>{mk(new T.BoxGeometry(.9,7,.9),STD('#ffd23a',{roughness:.6}),X+dx,3.5,gz,true);mk(new T.SphereGeometry(.7,14,10),STD('#ff5a4e',{roughness:.5}),X+dx,7.5,gz,true);});
+      cols.forEach((c,i)=>{const m=mk(new T.TorusGeometry(6.6,.55,10,10,Math.PI/cols.length),STD(c,{roughness:.55}),X,7,gz,true);m.rotation.z=i*Math.PI/cols.length;});}
+    // dieren
+    const giraffe=sc=>{const g=new T.Group();const sp=tex(256,256,(q,w,h)=>{q.fillStyle='#f2c45c';q.fillRect(0,0,w,h);q.fillStyle='#a25e26';for(let i=0;i<30;i++){const x=Math.random()*w,y=Math.random()*h,r=13+Math.random()*12;q.beginPath();for(let k=0;k<7;k++){const a=k/7*6.283+Math.random()*.3,rr=r*(.75+Math.random()*.35);q.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr);}q.closePath();q.fill();}});
+      const M=new T.MeshStandardMaterial({map:sp,roughness:.85}),D=STD('#5a3418',{roughness:.8}),BK=STD('#141414',{roughness:.3});
+      const body=add(g,new T.SphereGeometry(1,16,12),M,0,2.6,0);body.scale.set(.64,.64,1.18);
+      const legs=[];[[.3,.62],[-.3,.62],[.3,-.62],[-.3,-.62]].forEach(([x,z])=>{const L=new T.Group();L.position.set(x,2.4,z);g.add(L);cyl(L,.12,.085,2.3,M,0,-1.15,0,8);cyl(L,.1,.12,.16,D,0,-2.32,0,8,{ns:true});legs.push(L);});
+      const neck=new T.Group();neck.position.set(0,2.9,.85);g.add(neck);const nk=new T.Group();nk.rotation.x=.42;neck.add(nk);
+      cyl(nk,.16,.3,2.75,M,0,1.37,0,10);box(nk,.06,2.5,.12,D,0,1.4,-.2,{ns:true});
+      const hd=new T.Group();hd.position.set(0,2.75,0);hd.rotation.x=-.3;nk.add(hd);
+      box(hd,.34,.36,.55,M,0,0,.12);box(hd,.27,.27,.42,M,0,-.04,.5);[-.1,.1].forEach(x=>{cyl(hd,.035,.045,.32,D,x,.33,-.02,6,{ns:true});add(hd,new T.SphereGeometry(.065,8,6),D,x,.5,-.02,{ns:true});});
+      [-1,1].forEach(k=>{const e=add(hd,new T.ConeGeometry(.08,.26,6),M,k*.24,.14,-.08,{ns:true});e.rotation.z=-k*1.25;add(hd,new T.SphereGeometry(.055,8,6),BK,k*.18,.08,.24,{ns:true});});
+      const tl=cyl(g,.03,.03,1.1,M,0,2.2,-1.2,6,{ns:true});tl.rotation.x=.25;add(g,new T.SphereGeometry(.1,6,5),D,0,1.65,-1.35,{ns:true});
+      g.scale.setScalar(sc);scene.add(g);return {g,legs,neck,nk,hd};};
+    const elephant=sc=>{const g=new T.Group();const M=STD('#8f969e',{roughness:.95}),Dk=STD('#6e747b',{roughness:.95}),W=STD('#f4efe2',{roughness:.5}),BK=STD('#141414',{roughness:.3}),PK=STD('#d6a0a6',{roughness:.9});
+      const body=add(g,new T.SphereGeometry(1,18,14),M,0,2.35,0);body.scale.set(1.35,1.25,1.9);
+      const legs=[];[[.72,1.05],[-.72,1.05],[.72,-1.05],[-.72,-1.05]].forEach(([x,z])=>{const L=new T.Group();L.position.set(x,1.6,z);g.add(L);cyl(L,.42,.45,1.6,M,0,-.8,0,12);cyl(L,.47,.47,.1,Dk,0,-1.58,0,12,{ns:true});legs.push(L);});
+      const head=new T.Group();head.position.set(0,2.95,1.75);g.add(head);const hm=add(head,new T.SphereGeometry(.95,16,12),M,0,0,0);hm.scale.set(1,1,.9);
+      [-1,1].forEach(k=>add(head,new T.SphereGeometry(.09,8,6),BK,k*.5,.25,.68,{ns:true}));
+      const ears=[-1,1].map(k=>{const p=new T.Group();p.position.set(k*.72,.15,-.05);head.add(p);const e=add(p,new T.CircleGeometry(1.05,20),new T.MeshStandardMaterial({color:lin('#8f969e'),roughness:.95,side:T.DoubleSide}),k*.78,-.1,-.15,{ns:true});e.rotation.y=k*(Math.PI/2-.35);
+        const ei=add(p,new T.CircleGeometry(.75,18),new T.MeshStandardMaterial({color:lin('#d6a0a6'),roughness:.9,side:T.DoubleSide}),k*.74,-.1,-.08,{ns:true});ei.rotation.y=k*(Math.PI/2-.35);return p;});
+      [-1,1].forEach(k=>{const t1=add(head,new T.ConeGeometry(.09,.8,8),W,k*.36,-.55,.7,{ns:true});t1.rotation.x=1.9;});
+      const tr=[];let par=new T.Group();par.position.set(0,-.25,.8);par.rotation.x=-.25;head.add(par);
+      for(let i=0;i<6;i++){const r1=.3-i*.03,r2=.27-i*.03;cyl(par,r2,r1,.46,M,0,-.23,0,10,{ns:true});tr.push(par);if(i<5){const nx=new T.Group();nx.position.y=-.44;par.add(nx);par=nx;}}
+      const tl=cyl(g,.04,.04,1,M,0,2,-1.85,6,{ns:true});tl.rotation.x=.3;
+      g.scale.setScalar(sc);scene.add(g);return {g,legs,head,ears,tr,tl};};
+    const sOf=u=>ZOO.q.s0+u;
+    const gf=giraffe(1),gb=giraffe(.62),el=elephant(1),eb=elephant(.5);
+    const GH={x:X-22,z:zz(64)},GF={x:X-6.9,z:zz(54)};
+    gf.g.position.set(GH.x,0,GH.z);gf.g.rotation.y=.6;gb.g.position.set(X-30,0,zz(70));gb.g.rotation.y=2.2;
+    el.g.position.set(X-13.5,0,zz(100));el.g.rotation.y=Math.PI/2-.25;eb.g.position.set(X-17,0,zz(94));eb.g.rotation.y=Math.PI/2+.5;
+    const GS=sOf(54),ES=sOf(100);
+    // bezoekers
+    [[X+6.4,zz(48),0],[X+6.6,zz(60),1],[X+6.2,zz(96),0],[X+6.6,zz(108),1]].forEach(([x,z,kid])=>{const hc=pk(HCs);const H=human({top:pk(TOPs),pants:pk(['#3b4252','#3d5a80','#5a4632']),skin:pk(SKs),hair:hc,brow:hc,hairStyle:pk(['short','long','bun']),shoes:pk(['#22252b','#f2f2f2']),child:!!kid});
+      H.g.position.set(x,0,z);H.g.rotation.y=Math.PI/2+(Math.random()-.5)*.5;scene.add(H.g);H.ph=Math.random()*6;H.mode='idle';ZV.push(H);});
+    const Z={gs:'home',gt:0,eu:0,trump:-9,lap:-1,said:{},bias:0,dark:0};
+    const rel=sp=>{let d=((sp-TRAIN.s)%TR_.L+TR_.L)%TR_.L;if(d>TR_.L/2)d-=TR_.L;return d;};
+    const once=(k,fn)=>{const lp=TRAIN.lap||0;if(Z.said[k]!==lp){Z.said[k]=lp;fn();}};
+    const turnTo=(o,tx,tz,dt,sp)=>{const a=Math.atan2(tx-o.g.position.x,tz-o.g.position.z);let d=a-o.g.rotation.y;d=Math.atan2(Math.sin(d),Math.cos(d));o.g.rotation.y+=Math.max(-dt*sp,Math.min(dt*sp,d));return Math.abs(d);};
+    const look=(o,piv,tx,ty,tz,dt,lim)=>{const p=new T.Vector3();piv.getWorldPosition(p);let a=Math.atan2(tx-p.x,tz-p.z)-o.g.rotation.y;a=Math.atan2(Math.sin(a),Math.cos(a));a=Math.max(-lim,Math.min(lim,a));piv.rotation.y+=(a-piv.rotation.y)*Math.min(1,dt*3);};
+    const walk=(o,ph,on)=>{o.legs.forEach((L,i)=>{L.rotation.x=on?Math.sin(ph+((i===0||i===3)?0:Math.PI))*.4:L.rotation.x*.85;});};
+    stepZoo=(dt,t)=>{if(!TRAIN)return;const fr=TR_.at(TRAIN.s),drv=TRAIN.state==='drive';
+      const u=((TRAIN.s-ZOO.q.s0)%TR_.L+TR_.L)%TR_.L,cu=u-13;
+      // tunnel: donker als de camera erin zit
+      const inT=cu>5&&cu<39,f=$('dflash');if(f&&inT!==!!Z.dark){Z.dark=inT;f.style.transition='opacity .45s';f.style.background='#04050a';f.style.opacity=inT?.55:0;}
+      if(drv){const dT=rel(ZOO.tin);if(dT>30&&dT<120&&TRAIN.v>2)once('tun',()=>{say(rnd(['Daar is een tunnel! We rijden erin. Tuut tuut!','Kijk, een tunnel! Het wordt even donker.']));try{whistle&&whistle();}catch(e){}});
+        if(cu>37&&cu<60)once('zoo',()=>{say(rnd(['Kijk, de dierentuin! Zie je de giraf?','Wauw, we rijden door de dierentuin!']));dmsg('Dierentuin!',1600);});}
+      Z.bias+=(((cu>41&&u<128)?1:0)-Z.bias)*Math.min(1,dt*1.5);ZOO.bias=Z.bias;
+      // giraf komt kijken
+      const dg=rel(GS),p=gf.g.position;
+      if(Z.gs==='home'){gf.nk.rotation.x+=((.42+Math.sin(t*.5)*.25)-gf.nk.rotation.x)*Math.min(1,dt*2);gf.neck.rotation.y=Math.sin(t*.4)*.4;walk(gf,0,false);if(dg>0&&dg<190)Z.gs='go';}
+      else if(Z.gs==='go'||Z.gs==='back'){const tg=Z.gs==='go'?GF:GH;const dx=tg.x-p.x,dz=tg.z-p.z,dd=Math.hypot(dx,dz);turnTo(gf,tg.x,tg.z,dt,2.2);
+        if(dd>.3){const v=Math.min(dd,3.4*dt);p.x+=dx/dd*v;p.z+=dz/dd*v;Z.gt+=dt*7;walk(gf,Z.gt,true);gf.nk.rotation.x+=(.3-gf.nk.rotation.x)*Math.min(1,dt*2);}
+        else{Z.gs=Z.gs==='go'?'look':'home';Z.gt=0;}}
+      else if(Z.gs==='look'){const tb=turnTo(gf,X,p.z,dt,1.6);walk(gf,0,false);look(gf,gf.neck,fr.x,4,fr.z,dt,1.25);gf.nk.rotation.x+=((.62+Math.sin(t*2.2)*.06)-gf.nk.rotation.x)*Math.min(1,dt*2);
+        if(drv&&dg<70&&dg>8&&tb<.5)once('gir',()=>{say(rnd(['Kijk, de giraf komt kijken! Hoi giraf!','De giraf zegt hallo! Zwaai maar!']));});
+        if(dg<-(TRAIN.len+12)){Z.gt+=dt;if(Z.gt>3){Z.gs='back';Z.gt=0;}}}
+      look(gb,gb.neck,fr.x,3,fr.z,dt,Math.abs(rel(sOf(70)))<80?1:0);gb.nk.rotation.x=.9+Math.sin(t*.7+1)*.4;
+      // olifant
+      const de=rel(ES);[el,eb].forEach((o,i)=>{o.ears.forEach((e,k)=>{e.rotation.y=(k?1:-1)*(Math.sin(t*(1.6+i*.5)+i)*.28);});o.tl.rotation.z=Math.sin(t*2+i)*.3;});
+      const up=t-Z.trump<3.2;el.tr.forEach((j,i)=>{const tgt=up?(i===0?-.6:-.42):(-.08+Math.sin(t*1.3+i*.6)*.1);j.rotation.x+=(tgt-j.rotation.x)*Math.min(1,dt*(up?4:2));j.rotation.z=up?0:Math.sin(t*.9+i*.5)*.08;});
+      eb.tr.forEach((j,i)=>{j.rotation.x=.1+Math.sin(t*2+i*.7)*.18;});
+      look(el,el.head,fr.x,2,fr.z,dt,de>-10&&de<90?.7:0);
+      if(drv&&de>6&&de<55)once('ele',()=>{Z.trump=t;try{if(S.sound!==false)trumpet(.22);}catch(e){}setTimeout(()=>{if(CT===ctl)say(rnd(['Toeteroe! Wat een grote olifant!','Hoor je de olifant toeteren?']));},1300);});
+      // bezoekers zwaaien
+      ZV.forEach(H=>{const dz=Math.abs(H.g.position.z-fr.z);H.mode=dz<35?'wave':'idle';H.ph+=dt*3;hPose(H,H.mode,H.ph,dt);});};}
   function stepBirds(dt){if(!BIRDS.length)return;const ts=TRAIN.s;BIRDS.forEach(b=>{b.t+=dt;const d=((b.s0-ts)%TR_.L+TR_.L)%TR_.L;
     if(b.state===0){b.g.position.y=.27+Math.max(0,Math.sin(b.t*9))*.05*(Math.sin(b.t*.7)>.6?1:0);if(Math.sin(b.t*1.3+b.s0)>.97)b.g.rotation.y+=dt*4;b.wl.rotation.z=-.15;b.wr.rotation.z=.15;
       if(d<34&&TRAIN.v>1.5){b.state=1;b.t=0;b.vel.set(b.n[0]*(3+Math.random()*2.5),4.5+Math.random()*2.5,b.n[1]*(3+Math.random()*2.5));b.g.rotation.y=Math.atan2(b.vel.x,b.vel.z);if(Math.random()<.4)tone(2400+Math.random()*900,.07,'sine',.03);}}
@@ -7564,15 +7692,15 @@ const myBeac=blinkers.slice(bl0);const beacL=[];if(NIGHT){[-1,1].forEach(k=>{con
     if(TRN&&$('tDoor'))tUI();
     PAX.forEach(H=>{if(H.g.visible){H.ph+=dt*(H.mode==='walk'?7:3);hPose(H,H.mode,H.ph,dt);}});
     STN.forEach((s2,i)=>{s2.ar.visible=i===T2.tgt&&T2.state==='drive';s2.ar.position.y=4.2+Math.sin(t*4)*.3;s2.zone.visible=i===T2.tgt;});
-    stepBirds(dt);trainPlace();const p=TR_.at(T2.s);st.x=p.x;st.z=p.z;st.hx=p.hx;st.hz=p.hz;st.v=T2.v;}
+    stepBirds(dt);stepZoo(dt,t);trainPlace();const p=TR_.at(T2.s);st.x=p.x;st.z=p.z;st.hx=p.hx;st.hz=p.hz;st.v=T2.v;}
   function trainCam(){const p=TR_.at(TRAIN.s),h=[p.hx,p.hz],inn=[-p.hz,p.hx];const T2=TRAIN;
-    if(T2.state==='drive'||T2.state==='rev'){return [new T.Vector3(p.x-h[0]*13-inn[0]*3.2,7.6,p.z-h[1]*13-inn[1]*3.2),new T.Vector3(p.x+h[0]*16+inn[0]*2.4,1.2,p.z+h[1]*16+inn[1]*2.4)];}
+    if(T2.state==='drive'||T2.state==='rev'){const zb=ZOO?ZOO.bias:0,ci=-3.2-1.1*zb,li=2.4-6.5*zb;return [new T.Vector3(p.x-h[0]*13+inn[0]*ci,7.6+1.4*zb,p.z-h[1]*13+inn[1]*ci),new T.Vector3(p.x+h[0]*16+inn[0]*li,1.2,p.z+h[1]*16+inn[1]*li)];}
     const m=TR_.at(T2.s-T2.len*.5);return [new T.Vector3(m.x+inn[0]*14.5+m.hx*3,3.6,m.z+inn[1]*14.5+m.hz*3),new T.Vector3(m.x+inn[0]*1.5-m.hx*1.5,1.9,m.z+inn[1]*1.5-m.hz*1.5)];}
   function drawTrainMap(){if(!mmX)return;const x=mmX,W=264,R0=W/2;x.clearRect(0,0,W,W);x.save();x.beginPath();x.arc(R0,R0,R0,0,7);x.clip();x.fillStyle='#1f2a44';x.fillRect(0,0,W,W);
-    const ext=Math.max(TR_.xE-TR_.xW,TR_.zN-TR_.zS),sc=150/ext,P=(wx,wz)=>[R0+wx*sc,R0-wz*sc];
+    const ext=Math.max(TR_.xE-TR_.xW,TR_.zN-TR_.zS),sc=150/ext,P=(wx,wz)=>[R0+wx*sc,R0-wz*sc];if(ZOO){const a=P(ZOO.x-52,ZOO.zt-40),b=P(ZOO.x+4,ZOO.zt-124);x.fillStyle='#3d7a3f';x.fillRect(a[0],a[1],b[0]-a[0],b[1]-a[1]);}
     x.strokeStyle='#4a5872';x.lineWidth=5;for(let g=gx0;g<=gx1;g+=2){let a=P(g*B,gz0*B),b=P(g*B,gz1*B);x.beginPath();x.moveTo(...a);x.lineTo(...b);x.stroke();a=P(gx0*B,g*B);b=P(gx1*B,g*B);x.beginPath();x.moveTo(...a);x.lineTo(...b);x.stroke();}
     x.strokeStyle='#8b96ad';x.lineWidth=10;x.beginPath();for(let s2=0;s2<=TR_.L;s2+=6){const q=TR_.at(s2),a=P(q.x,q.z);s2?x.lineTo(...a):x.moveTo(...a);}x.closePath();x.stroke();
-    x.strokeStyle='#fff';x.lineWidth=2;x.setLineDash([5,5]);x.stroke();x.setLineDash([]);
+    x.strokeStyle='#fff';x.lineWidth=2;x.setLineDash([5,5]);x.stroke();x.setLineDash([]);if(ZOO){const a=P(ZOO.x,ZOO.zt-4),b=P(ZOO.x,ZOO.zt-40);x.strokeStyle='#2a2f3a';x.lineWidth=14;x.lineCap='butt';x.beginPath();x.moveTo(...a);x.lineTo(...b);x.stroke();}
     XS.forEach(X=>{const a=P(X.cx,X.cz);x.strokeStyle=X.closed?'#ff4a3a':'#ffffff';x.lineWidth=4;x.beginPath();x.moveTo(a[0]-7,a[1]-7);x.lineTo(a[0]+7,a[1]+7);x.moveTo(a[0]+7,a[1]-7);x.lineTo(a[0]-7,a[1]+7);x.stroke();});
     STN.forEach((o,i)=>{const q=TR_.at(o.sP),a=P(q.x,q.z),nx=i===TRAIN.tgt;x.fillStyle=i<TRAIN.done?'#3ec46d':'#2f7bff';const r2=nx?(14+Math.sin(st.t*5)*2):11;x.beginPath();x.arc(a[0],a[1],r2,0,7);x.fill();x.strokeStyle=nx?'#ffc21a':'#fff';x.lineWidth=nx?4:3;x.stroke();});
     {const q=TR_.at(TRAIN.s),a=P(q.x,q.z),ang=Math.atan2(-q.hz,q.hx);x.save();x.translate(a[0],a[1]);x.rotate(ang);x.fillStyle='#ffc21a';x.strokeStyle='#fff';x.lineWidth=3;x.beginPath();x.moveTo(14,0);x.lineTo(-10,-10);x.lineTo(-5,0);x.lineTo(-10,10);x.closePath();x.fill();x.stroke();x.restore();}
@@ -7642,9 +7770,17 @@ const myBeac=blinkers.slice(bl0);const beacL=[];if(NIGHT){[-1,1].forEach(k=>{con
     setTimeout(()=>{if(CT!==ctl)return;washDrop();const w=WSH();w.n=0;w.d=false;save();mudOn(false);resumeRoam();if(fd)fd.style.opacity='0';setTimeout(()=>{if(CT===ctl)say('De auto is weer schoon. Rij maar weer rond!');},700);},520);}
   function washDrop(){$('drive').classList.remove('washing');const h=$('washHud');if(h)h.remove();if(!WS)return;WS.sc.traverse(o=>{if(o.geometry&&o.geometry!==sphG)o.geometry.dispose();});WS=null;}
   function meow(){tone(720,.35,'triangle',.18,0,430);tone(980,.18,'sine',.08,0,760);}
+  /* vrij rijden: rechtdoor aan de rand van de stad = door de tunnel naar de andere kant */
+  function tunStep(n,dist){if(dist>0)return;const f=$('dflash');
+    if(dist<=-6.5&&!st.tunB){st.tunB=true;if(f){f.style.transition='opacity .3s';f.style.background='#000';f.style.opacity=1;}try{sfx.swish();tone(110,.5,'sine',.06);}catch(e){}}
+    if(dist<=-12){const d=st.d;let gx=n.gx,gz=n.gz;if(d===0)gz=gz0;else if(d===2)gz=gz1;else if(d===1)gx=gx0;else gx=gx1;
+      st.ni++;nodes.push(freeNode(gx,gz,d));st.x=gx*B-DV[d][0]*9.5;st.z=gz*B-DV[d][1]*9.5;st.hx=DV[d][0];st.hz=DV[d][1];st.choice=null;st.waitSaid=false;st.tunB=false;
+      const [px,pz]=truckPose();st.camP.set(px-st.hx*4,7.5,pz-st.hz*4);st.camL.set(px+st.hx*14,1,pz+st.hz*14);
+      setTimeout(()=>{if(f){f.style.opacity=0;setTimeout(()=>{f.style.transition='';},450);}},220);
+      if(!st.tunSaid||Math.random()<.25){st.tunSaid=true;setTimeout(()=>{if(CT===ctl)say(rnd(['Door de tunnel! Nu ben je aan de andere kant van de stad.','Joepie, een tunnel!']));},350);}}}
   function choose(rel){if(st.phase!=='drive'||st.turn||st.wrong>0)return;const n=nodes[st.ni];if(!n||n.end)return;
     const o=rel==='left'?LEFT(st.d):rel==='right'?RIGHT(st.d):st.d;
-    if(!inB(n.gx+DV[o][0],n.gz+DV[o][1])){dmsg('Die weg is dicht!',1100,true);sfx.oops();return;}
+    if(!inB(n.gx+DV[o][0],n.gz+DV[o][1])&&!(n.edge&&ROAM.on&&o===st.d)){dmsg('Die weg is dicht!',1100,true);sfx.oops();return;}
     st.choice=o;sfx.swish();tone(900,.05,'square',.05,.12);tone(900,.05,'square',.05,.42);dmsg(rel==='left'?'Links!':rel==='right'?'Rechts!':'Rechtdoor!',800);}
 
   function stepDrive(dt){if(st.hold>0){st.hold-=dt;st.v=0;return;}const n=nodes[st.ni],target=LV.v;
@@ -7656,10 +7792,10 @@ const myBeac=blinkers.slice(bl0);const beacL=[];if(NIGHT){[-1,1].forEach(k=>{con
     if(st.wrong>0){st.wrong-=dt;if(st.wrong<=0){resetToNode();return;}}
     else if(n){const [jx,jz]=nodePos(n),dist=(jx-st.x)*fx+(jz-st.z)*fz;
       if(n.end){stopAt=dist;if(dist<.2){st.x=jx;st.z=jz;arrive();return;}}
-      else if(!n.decide&&(st.choice==null||st.choice===st.d)){if(dist<=0){st.choice=null;afterNode(n,st.d,st.d);}}
+      else if(!n.decide&&(st.choice==null||st.choice===st.d)){if(n.edge&&ROAM.on)tunStep(n,dist);else if(dist<=0){st.choice=null;afterNode(n,st.d,st.d);}}
       else if(!n.decide&&dist<=TR+.05){const o=st.choice;st.x=jx-fx*TR;st.z=jz-fz*TR;st.turn={i:st.d,o,phi:0,node:n,c:[jx-fx*TR+DV[o][0]*TR,jz-fz*TR+DV[o][1]*TR]};return;}
       else if(!n.decide){}
-      else if(st.choice==null){stopAt=dist-TR-1;if(stopAt<.4&&!st.waitSaid){st.waitSaid=true;say('Draai aan het stuur! Volg de gele pijl.');dmsg('Draai aan het stuur!',1600);}}
+      else if(st.choice==null){stopAt=dist-TR-2.6;if(stopAt<.4&&!st.waitSaid){st.waitSaid=true;say('Draai aan het stuur! Volg de gele pijl.');dmsg('Draai aan het stuur!',1600);}}
       else if(st.choice===st.d){if(dist<=0)afterNode(n,st.d,st.d);}
       else if(dist<=TR+.05){const o=st.choice;st.x=jx-fx*TR;st.z=jz-fz*TR;st.turn={i:st.d,o,phi:0,node:n,c:[jx-fx*TR+DV[o][0]*TR,jz-fz*TR+DV[o][1]*TR]};return;}}
     let tv=target;if(stopAt!=null)tv=Math.min(target,Math.sqrt(Math.max(0,stopAt)*2*14));
@@ -7826,7 +7962,7 @@ if(TRN){engSet(0);}else if(st.phase==='drive'){engStart('truck');engSet(st.v/LV.
     // camera
     let cp,cl;
     if(TRN&&TRAIN){[cp,cl]=trainCam();}
-    else if(st.phase==='drive'){const cb=truck.userData.kenney?(AMBK||LK?14.5:16):13,ch=truck.userData.kenney?(LK?7.6:8.6):7;cp=new T.Vector3(px-st.hx*cb,ch,pz-st.hz*cb);cl=new T.Vector3(px+st.hx*10,1,pz+st.hz*10);}
+    else if(st.phase==='drive'){const cb=truck.userData.kenney?(AMBK||LK?14.5:16):13,ch=truck.userData.kenney?(LK?7.6:8.6):7;cp=new T.Vector3(px-st.hx*cb,ch,pz-st.hz*cb);cl=new T.Vector3(px+st.hx*10,1,pz+st.hz*10);if(FREE){const cL=(a,b,v)=>Math.max(a*B-5.4,Math.min(b*B+5.4,v));cp.x=cL(gx0,gx1,cp.x);cp.z=cL(gz0,gz1,cp.z);}}
     else{const n=[-destRight[0],-destRight[1]],side=[st.hx,st.hz];
       if(LD){const q=[-6,-18,19,1,13,2],a=tkP(q[0],q[1]),b=tkP(q[3],q[4]);cp=new T.Vector3(a[0],q[2],a[1]);cl=new T.Vector3(b[0],q[5],b[1]);}
       else if(TK){const a=tkP(-31,-3),b=tkP(2,5);cp=new T.Vector3(a[0],12.5,a[1]);cl=new T.Vector3(b[0],1.2,b[1]);}
@@ -7895,7 +8031,7 @@ if(TRN){engSet(0);}else if(st.phase==='drive'){engStart('truck');engSet(st.v/LV.
     if(st.phase==='wash'&&WS){washStep(dt);rd.render(WS.sc,WS.cam);}else rd.render(scene,cam);
     }catch(err){console.error(err);}
   }
-  const ctl={input,stop(){st.run=false;sirOff();hornOff();$('lpanel').hidden=true;$('cspeed').hidden=true;$('cwheel').hidden=true;$('dact').hidden=false;{const cd=$('lostCard');if(cd)cd.remove();}['callCard','miniMap','washHud','wfade','trainHud'].forEach(i=>{const e=$(i);if(e)e.remove();});$('drive').classList.remove('washing');$('drive').classList.remove('train');$('drive').classList.remove('free');window.removeEventListener('resize',onR);scene.traverse(o=>{if(o.geometry&&o.geometry!==gableGeo&&o.geometry!==sphG)o.geometry.dispose();});gableGeo.dispose();sphG.dispose();},
+  const ctl={input,stop(){st.run=false;{const f=$('dflash');if(f){f.style.opacity=0;f.style.transition='';}}sirOff();hornOff();$('lpanel').hidden=true;$('cspeed').hidden=true;$('cwheel').hidden=true;$('dact').hidden=false;{const cd=$('lostCard');if(cd)cd.remove();}['callCard','miniMap','washHud','wfade','trainHud'].forEach(i=>{const e=$(i);if(e)e.remove();});$('drive').classList.remove('washing');$('drive').classList.remove('train');$('drive').classList.remove('free');window.removeEventListener('resize',onR);scene.traverse(o=>{if(o.geometry&&o.geometry!==gableGeo&&o.geometry!==sphG)o.geometry.dispose();});gableGeo.dispose();sphG.dispose();},
     finish(){sirOff();if(FREE){freeDone();return;}win();},siren(){if(lstate.S){sirOff();}else{lstate.S=true;lstate.Z=true;sirH=sfx.siren(SIRK,900);}lightsUI();}};
   function freeDone(){if(st.freeDone)return;st.freeDone=true;S.done[doneKey(m)]=true;S.coins+=5;save();coinUI();st.done+=5;$('dcoins').textContent=st.done;sfx.win();
     dmsg('Goed gedaan!',2200);setTimeout(()=>{if(CT===ctl)say(rnd(['Goed gedaan, brandweerman Finn!','Super gedaan, Finn!','Wat ben jij een held!'])+' Iedereen instappen! We rijden weer verder.');},500);
